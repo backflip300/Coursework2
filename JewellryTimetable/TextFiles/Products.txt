@@ -1,0 +1,4 @@
+cat[/GlassRed/6/GlassBlue/3/GlassOrange/23]160
+dog[/GlassRed/032/GlassBlue/01/GlassOrange/021]7890
+Bob[/GlassRed/0213/GlassOrange/02123/32123/067]12
+testimozes[/32123/078]67
