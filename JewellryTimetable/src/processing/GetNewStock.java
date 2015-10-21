@@ -43,7 +43,8 @@ public class GetNewStock {
 
 	public GetNewStock(DefaultTableModel productsTableModel) {
 		Validater = new Validater();
-		productsTableModel = this.productsTableModel;
+		//productsTableModel = this.productsTableModel;
+		this.productsTableModel = productsTableModel;
 		// TODO Auto-generated constructor stub
 	}
 

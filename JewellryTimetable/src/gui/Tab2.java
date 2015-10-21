@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,6 +13,8 @@ import javax.swing.JScrollPane;
 import java.awt.Graphics;
 
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
@@ -27,8 +30,8 @@ public class Tab2 {
 	private JTable table, ttable;
 	private Tab2TableModel tModel;
 	private timetableTableModel ttModel;
-	private static DefaultTableModel dtablemodel;
-	private DefaultTableModel dtablemodel2;
+	private static DefaultTableModel dtablemodel, dtablemodel2;
+
 	private GetNewStock getNewStock;
 	private TTMRenderer cellRenderer;
 	private TTGui ttGui;
@@ -77,7 +80,7 @@ public class Tab2 {
 		ttable.setDefaultRenderer(Object.class, cellRenderer);
 
 		// create timetable renderer
-		ttGui = new TTGui();
+		ttGui = new TTGui(dtablemodel2);
 		ttGui.setPreferredSize(new Dimension(500, 400));
 		ttGui.setBackground(Color.white);
 		ttGui.paint(g);
@@ -102,6 +105,13 @@ public class Tab2 {
 		tab2.add(ttGui, "wrap");
 		tab2.add(NewProduct);
 
+		ttable.getModel().addTableModelListener(new TableModelListener() {
+
+			public void tableChanged(TableModelEvent e) {
+				ttGui.update(dtablemodel2);
+			}
+		});
+
 		// adding
 		return tab2;
 
@@ -110,4 +120,5 @@ public class Tab2 {
 	public static void addRow(String Product) {
 		dtablemodel.addRow(new Object[] { Product, "0" });
 	}
+
 }

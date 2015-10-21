@@ -25,19 +25,19 @@ public class Validater {
 		int hours = 100;
 		int mins = 1000;
 		if (toValidate.length() == 5) {
-			System.out.println("test");
+			//System.out.println("test");
 			if (toValidate.substring(0, 2).matches("[0-9]+")) {
 				hours = Integer.parseInt((toValidate.substring(0, 2)));
-				System.out.println("test");
+				
 			}
 			if (toValidate.substring(3).matches("[0-9]+")) {
-				System.out.println("test");
+				
 				mins = Integer.parseInt((toValidate.substring(3)));
 			}
-			System.out.println(mins + "\t" + hours);
+			//System.out.println(mins + "\t" + hours);
 			if (mins < 60 && mins >= 0 && hours < 24 && hours >= 0) {
 				isValid = true;
-				System.out.println("test");
+
 			}
 		}
 		return isValid;
