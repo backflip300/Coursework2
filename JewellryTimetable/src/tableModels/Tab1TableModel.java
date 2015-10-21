@@ -10,7 +10,7 @@ public class Tab1TableModel {
 	private Path Stocks = Paths.get("textFiles/Stocks.txt");
 	public Object data[][];
 	private String columnNames[] = { "Name",
-			"Current in Stock", "# to restock" };
+			"Current in Stock /cm or /g", "# to restock" };
 	private int a = 1;
 	ArrayList<Object> data2 = new ArrayList<Object>();
 

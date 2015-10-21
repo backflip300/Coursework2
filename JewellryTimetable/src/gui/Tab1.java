@@ -62,7 +62,7 @@ public class Tab1 {
 		tModel = new Tab1TableModel();
 		
 		dtablemodel = new DefaultTableModel(tModel.data, new Object[] { "Name",
-				"Current in Stock", "# to restock" }) {
+				"Current in Stock in /g or /cm", "# to restock" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 2;
