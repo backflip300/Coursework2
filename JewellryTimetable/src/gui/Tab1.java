@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.clappedArrayList;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JButton;
