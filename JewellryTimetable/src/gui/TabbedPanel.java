@@ -19,8 +19,7 @@ public class TabbedPanel extends JFrame {
 	public TabbedPanel() {
 		int width = (int) 930;
 		int height = (int) 540;
-		mFrame = new JFrame("Iventorize");
-		mFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+rame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mFrame.getContentPane().setLayout(new MigLayout());
 		setTitle("Inventorize");
 		setSize(width, height);		
