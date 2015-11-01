@@ -108,7 +108,8 @@ public class Tab2 {
 		ttable.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
-				ttGui.update(dtablemodel2);
+				ttGui.update(dtablemodel2,dtablemodel);
+				
 			}
 		});
 
