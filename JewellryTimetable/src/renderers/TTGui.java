@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,7 @@ public class TTGui extends JPanel {
 	private ArrayList<String> Names;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
+	private String[][] sortedProducts;
 	private FileAccess Products;
 	private int timeSwap1, timeSwap2;
 	private int z;
@@ -36,6 +38,7 @@ public class TTGui extends JPanel {
 	public TTGui(DefaultTableModel ttDefaultTableModel) {
 		// TODO Auto-generated constructor stub
 		this.ttTableModel = ttDefaultTableModel;
+		sortedProducts = new String[5][1000];
 
 	}
 
@@ -103,6 +106,7 @@ public class TTGui extends JPanel {
 		// firstfitalgorithm
 		// create containers
 		dayTime = new int[5][2];
+		Arrays.fill(dayTime, 0);
 
 		for (int a = 0; a < 5; a++) {
 
@@ -114,21 +118,22 @@ public class TTGui extends JPanel {
 		boolean fits = true;
 		boolean allAdded = false;
 		boolean added = false;
-
+		Arrays.fill(sortedProducts, null);
 		for (int b = 0; b < Names.size(); b++) {
-			if (fits == true && allAdded == false) {
+			if (fits == true) {
 				added = false;
+				fits = false;
 				for (int c = 0; c < 5; c++) {
-					if (added == false && Times.get(b) <= dayTime[b][1] - dayTime[b][2]) {
-						
-						
-						
+					if (added == false && Times.get(c) <= dayTime[c][1] - dayTime[c][2]) {
+						dayTime[c][2] += dayTime[c][1];
+						for (int d = 0; d < sortedProducts.length; d++)
+							if (sortedProducts[c][d] == null)
+								sortedProducts[c][d] = Names.get(b);
+						fits = true;
 					}
 				}
-
 			}
 		}
-
 	}
 
 	public void paintComponent(Graphics g) {
