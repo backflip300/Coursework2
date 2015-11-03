@@ -68,13 +68,14 @@ public class TTGui extends JPanel {
 			System.out.println(Names.get(a) + "\t" + Times.get(a));
 		}
 
-		for (int y = 0; y < Times.size() - 1; y++) {
+		for (int y = 0; y < Times.size()-1; y++) {
 			toSwap = true;
 
 			timeSwap1 = Times.get(y);
 			timeSwap2 = Times.get(y + 1);
 			nameSwap1 = Names.get(y);
 			nameSwap2 = Names.get(y + 1);
+			System.out.println(y);
 			z = y;
 			if (timeSwap2 > timeSwap1) {
 
@@ -83,6 +84,7 @@ public class TTGui extends JPanel {
 					Times.set(z + 1, timeSwap1);
 					Names.set(z, nameSwap2);
 					Names.set(z + 1, nameSwap1);
+					
 
 					if (z == 0) {
 						toSwap = false;
@@ -90,6 +92,10 @@ public class TTGui extends JPanel {
 						toSwap = false;
 					} else {
 						z--;
+						timeSwap1 = Times.get(z);
+						timeSwap2 = Times.get(z + 1);
+						nameSwap1 = Names.get(z);
+						nameSwap2 = Names.get(z + 1);
 					}
 				}
 
@@ -133,10 +139,12 @@ public class TTGui extends JPanel {
 				added = false;
 				fits = false;
 				for (int c = 0; c < 5; c++) {
-					if (added == false && Times.get(c) <= dayTime[c][0] - dayTime[c][1]) {
-						dayTime[c][1] += dayTime[c][0];
+					if (added == false && Times.get(b) <= dayTime[c][0] - dayTime[c][1]) {
+						System.out.println("got here" + dayTime[c][1] );
+						dayTime[c][1] =  dayTime[c][1] + Times.get(c);
 						for (int d = 0; d < sortedProducts.length; d++) {
 							if (sortedProducts[c][d].equals(" ")){
+								
 								sortedProducts[c][d] = Names.get(b);
 							fits = true;
 							}
@@ -147,13 +155,11 @@ public class TTGui extends JPanel {
 		}
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 100; y++) {
-				System.out.println(x + "\t" + y);
-				System.out.println(sortedProducts[x][y]);
 				if (sortedProducts[x][y].equals(" ") == false) {
 					System.out.print(sortedProducts[x][y] + "\t");
 				}
 			}
-			System.out.println("\n");
+			System.out.println("");
 		}
 	}
 
