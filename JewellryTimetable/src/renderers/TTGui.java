@@ -106,33 +106,54 @@ public class TTGui extends JPanel {
 		// firstfitalgorithm
 		// create containers
 		dayTime = new int[5][2];
-		Arrays.fill(dayTime, 0);
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 2; y++) {
+				dayTime[x][y] = 0;
+			}
+		}
 
 		for (int a = 0; a < 5; a++) {
 
-			dayTime[a][1] = getMinutes((String) ttTableModel.getValueAt(a, 2))
+			dayTime[a][0] = getMinutes((String) ttTableModel.getValueAt(a, 2))
 					- getMinutes((String) ttTableModel.getValueAt(a, 1));
-			System.out.println(dayTime[a][1]);
+			System.out.println(dayTime[a][0]);
 		}
 		// plop into containers
 		boolean fits = true;
 		boolean allAdded = false;
 		boolean added = false;
-		Arrays.fill(sortedProducts, null);
+
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 1000; y++) {
+				sortedProducts[x][y] = " ";
+			}
+		}
 		for (int b = 0; b < Names.size(); b++) {
 			if (fits == true) {
 				added = false;
 				fits = false;
 				for (int c = 0; c < 5; c++) {
-					if (added == false && Times.get(c) <= dayTime[c][1] - dayTime[c][2]) {
-						dayTime[c][2] += dayTime[c][1];
-						for (int d = 0; d < sortedProducts.length; d++)
-							if (sortedProducts[c][d] == null)
+					if (added == false && Times.get(c) <= dayTime[c][0] - dayTime[c][1]) {
+						dayTime[c][1] += dayTime[c][0];
+						for (int d = 0; d < sortedProducts.length; d++) {
+							if (sortedProducts[c][d].equals(" ")){
 								sortedProducts[c][d] = Names.get(b);
-						fits = true;
+							fits = true;
+							}
+						}
 					}
 				}
 			}
+		}
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 100; y++) {
+				System.out.println(x + "\t" + y);
+				System.out.println(sortedProducts[x][y]);
+				if (sortedProducts[x][y].equals(" ") == false) {
+					System.out.print(sortedProducts[x][y] + "\t");
+				}
+			}
+			System.out.println("\n");
 		}
 	}
 
