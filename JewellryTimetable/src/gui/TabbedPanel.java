@@ -17,7 +17,7 @@ public class TabbedPanel extends JFrame {
 	static ImageIcon Icon = new ImageIcon("Images/lol.jpg");
 
 	public TabbedPanel() {
-		int width = (int) 930;
+		int width = (int) 800;
 		int height = (int) 540;
 		mFrame = new JFrame("Iventorize");
 		mFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);

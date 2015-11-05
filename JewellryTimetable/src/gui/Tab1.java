@@ -50,9 +50,9 @@ public class Tab1 {
 		JButton newStock = new JButton("New Stock");
 		// scroll area
 		cPanel = new JPanel();
-		cPanel.setPreferredSize(new Dimension(500, 400));
-		console = new ScrollTextArea(500, 400);
-		console.setPreferredSize(new Dimension(520, 475));
+		cPanel.setPreferredSize(new Dimension(300, 400));
+		console = new ScrollTextArea(300, 400);
+		console.setPreferredSize(new Dimension(320, 475));
 		cPanel.add(console);
 		// get order history
 		getOrderHistory();
@@ -71,10 +71,10 @@ public class Tab1 {
 	
 
 		// add above to tab1
-		tab1.add(cPanel, "east");
+		
 		tab1.add(restock, "South");
 		tab1.add(newStock, "South");
-
+		tab1.add(cPanel, "east");
 		table = new JTable(dtablemodel);
 		table.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scrollPane = new JScrollPane(table);

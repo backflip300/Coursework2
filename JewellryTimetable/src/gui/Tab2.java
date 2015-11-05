@@ -5,8 +5,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -31,13 +31,14 @@ public class Tab2 {
 	private Tab2TableModel tModel;
 	private timetableTableModel ttModel;
 	private static DefaultTableModel dtablemodel, dtablemodel2;
-
+	Dimension GuiSize = new Dimension(400, 120);
 	private GetNewStock getNewStock;
 	private TTMRenderer cellRenderer;
-	private TTGui ttGui;
+	private TTGui ttGui, ttGui2;
 	private Graphics g;
 
 	public Tab2() {
+
 	}
 
 	@SuppressWarnings("serial")
@@ -80,10 +81,14 @@ public class Tab2 {
 		ttable.setDefaultRenderer(Object.class, cellRenderer);
 
 		// create timetable renderer
-		ttGui = new TTGui(dtablemodel2);
-		ttGui.setPreferredSize(new Dimension(500, 400));
+		ttGui = new TTGui(dtablemodel2,this);
+		ttGui.setPreferredSize(GuiSize);
 		ttGui.setBackground(Color.white);
 		ttGui.paint(g);
+		ttGui2 = new TTGui(dtablemodel2,this);
+		ttGui2.setPreferredSize(GuiSize);
+		ttGui2.setBackground(Color.white);
+		ttGui2.paint(g);
 
 		// create buttons
 		JButton NewProduct = new JButton("New Product");
@@ -96,31 +101,32 @@ public class Tab2 {
 				getNewStock.addStock();
 			}
 		});
-		
-		scrollPane.setPreferredSize(new Dimension(200, 400));
-		ttscrollPane.setPreferredSize(new Dimension(300, 400));
-		tab2.add(scrollPane);
-		tab2.add(ttscrollPane);
-		tab2.add(ttGui, "wrap");
-		tab2.add(NewProduct);
-		//timetablemodel listener
+
+		scrollPane.setPreferredSize(new Dimension(200, 450));
+		scrollPane.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
+		ttscrollPane.setPreferredSize(new Dimension(400, 103));
+		tab2.add(scrollPane, "cell 0 0 1 4");
+		tab2.add(ttscrollPane, "cell 1 0 ");
+		tab2.add(ttGui,"cell 1 1");
+		tab2.add(ttGui2, "cell 1 2");
+		tab2.add(NewProduct, "cell 1 3, grow");
+		// timetablemodel listener
 		ttable.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
-				ttGui.update(dtablemodel2,dtablemodel);
-				
+				ttGui.update(dtablemodel2, dtablemodel);
+
 			}
 		});
-		//products table listener
+		// products table listener
 		table.getModel().addTableModelListener(new TableModelListener() {
-			
+
 			@Override
 			public void tableChanged(TableModelEvent arg0) {
 				// TODO Auto-generated method stub
-				ttGui.update(dtablemodel2,dtablemodel);
+				ttGui.update(dtablemodel2, dtablemodel);
 			}
 		});
-		
 
 		// adding
 		return tab2;
@@ -131,4 +137,7 @@ public class Tab2 {
 		dtablemodel.addRow(new Object[] { Product, "0" });
 	}
 
+	public Dimension getGuiSize() {
+		return GuiSize;
+	}
 }
