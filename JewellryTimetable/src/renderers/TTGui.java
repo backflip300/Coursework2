@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -27,21 +28,24 @@ public class TTGui extends JPanel {
 	private ArrayList<String> Names;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
-	private int[] timeUsed;
 	private String[][] sortedProducts;
 	private FileAccess Products;
 	private int timeSwap1, timeSwap2;
 	private int z;
 	private boolean toSwap = true;
-
 	private double division = 0.27778;
 
+	
 	public TTGui(DefaultTableModel ttDefaultTableModel) {
 		// TODO Auto-generated constructor stub
 		this.ttTableModel = ttDefaultTableModel;
 		sortedProducts = new String[5][1000];
-		timeUsed = new int[5];
-
+		dayTime = new int[5][2];
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 2; y++) {
+				dayTime[x][y] = 0;
+			}
+		}
 	}
 
 	public void createTimetable() {
@@ -112,8 +116,6 @@ public class TTGui extends JPanel {
 		// create containers
 		dayTime = new int[5][2];
 		for (int x = 0; x < 5; x++) {
-			timeUsed[x] = 0;
-
 			for (int y = 0; y < 2; y++) {
 				dayTime[x][y] = 0;
 			}
@@ -142,12 +144,10 @@ public class TTGui extends JPanel {
 				for (int c = 0; c < 5; c++) {
 					if (Times.get(b) <= dayTime[c][0] - dayTime[c][1] && added == false) {
 						// System.out.println("got here" + dayTime[c][1]);
-						dayTime[c][1] = dayTime[c][1] + Times.get(c);
-						for (int d = 0; d < sortedProducts.length; d++) {
+						for (int d = 0; d < 1000; d++) {
 							if (sortedProducts[c][d].equals(" ") && added == false) {
-
 								sortedProducts[c][d] = Names.get(b);
-								timeUsed[c] = timeUsed[c] + Times.get(b);
+								dayTime[c][1] = dayTime[c][1] + Times.get(b);
 								added = true;
 								fits = true;
 							}
@@ -156,8 +156,9 @@ public class TTGui extends JPanel {
 				}
 			}
 		}
+
 		for (int x = 0; x < 5; x++) {
-			System.out.println(timeUsed[x] + "\t " + dayTime[x][0]);
+			System.out.println(dayTime[x][1] + "\t " + dayTime[x][0]);
 			for (int y = 0; y < 100; y++) {
 				if (sortedProducts[x][y].equals(" ") == false) {
 					System.out.print(sortedProducts[x][y] + "\t");
@@ -173,14 +174,17 @@ public class TTGui extends JPanel {
 		for (int i = 0; i < 5; i++) {
 			g.setColor(Color.WHITE);
 			g.drawRect(1, i * thickness - 1, totalLength - 2, thickness - 2);
-			time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
 			g.setColor(Color.RED);
-			g.fillRect(0, i * thickness, (int) (time * division), thickness + 1);
-			time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
-			// System.out.println(totalLength - (int) (time * division));
 
+			time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
 			g.fillRect((int) (time * division), i * thickness, totalLength - (int) (time * division), thickness + 1);
 
+			time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
+			g.fillRect(0, i * thickness, (int) (time * division), thickness + 1);
+
+			g.setColor(Color.green);
+
+			g.fillRect((int) (time * division), i*thickness, (int) (dayTime[i][1] * division), thickness + 1);
 			g.setColor(Color.black);
 			g.drawRect(0, i * thickness, totalLength, thickness);
 		}
@@ -204,5 +208,4 @@ public class TTGui extends JPanel {
 
 		return totMins;
 	}
-
 }

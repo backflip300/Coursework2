@@ -96,15 +96,14 @@ public class Tab2 {
 				getNewStock.addStock();
 			}
 		});
-		// set sizes
-
+		
 		scrollPane.setPreferredSize(new Dimension(200, 400));
 		ttscrollPane.setPreferredSize(new Dimension(300, 400));
 		tab2.add(scrollPane);
 		tab2.add(ttscrollPane);
 		tab2.add(ttGui, "wrap");
 		tab2.add(NewProduct);
-
+		//timetablemodel listener
 		ttable.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
@@ -112,6 +111,16 @@ public class Tab2 {
 				
 			}
 		});
+		//products table listener
+		table.getModel().addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent arg0) {
+				// TODO Auto-generated method stub
+				ttGui.update(dtablemodel2,dtablemodel);
+			}
+		});
+		
 
 		// adding
 		return tab2;
