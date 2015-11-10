@@ -1,6 +1,7 @@
-cat[/GlassRed/6/GlassBlue/3/GlassOrange/23]20
-dog[/GlassRed/032/GlassBlue/01/GlassOrange/021]25
-Bob[/GlassRed/0213/GlassOrange/02123/32123/067]10
-testimozes[/32123/078]11
-happygolcuh[/GlassBlue/023/32123/08]34
-rainbowBead[/GlassRed/10/GlassBlue/10/GlassOrange/10/opalbluerods/10]15
+cat[/GlassRed/6/GlassBlue/3/GlassOrange/23]20|31
+dog[/GlassRed/032/GlassBlue/01/GlassOrange/021]25|25
+Bob[/GlassRed/0213/GlassOrange/02123/32123/067]10|13
+testimozes[/32123/078]11|23|12
+happygolcuh[/GlassBlue/023/32123/08]34|14
+rainbowBead[/GlassRed/10/GlassBlue/10/GlassOrange/10/opalbluerods/10]15|13
+blergh[/GlassRed/023/GlassBlue/06/GlassOrange/07/GlassRed/02/GlassBlue/03/GlassOrange/04]89|25

@@ -17,3 +17,6 @@ GlassOrange x 32	 total: 1754
 
 2015/11/03 14:37:11
 GlassRed x 2	 total: 1215
+
+2015/11/06 14:12:30
+GlassRed x -100	 total: 1113

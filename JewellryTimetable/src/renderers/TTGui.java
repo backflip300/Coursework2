@@ -22,13 +22,13 @@ public class TTGui extends JPanel {
 
 	private int time;
 	private String hours;
-	private int start, end;
+	private int start, end, kilnStart;
 	private String mins;
 	private String nameSwap1, nameSwap2;
 	private int thickness = 30;
-	private int totalLength;
+	private int totalLength, kilnSize = 1000;
 	private ArrayList<String> Names;
-	private ArrayList<Integer> Times;
+	private ArrayList<Integer> Times, kilnSizes;
 	private int[][] dayTime;
 	private String[][] sortedProducts;
 	private FileAccess Products;
@@ -37,12 +37,12 @@ public class TTGui extends JPanel {
 	private boolean toSwap = true;
 	private double division;
 
-	public TTGui(DefaultTableModel ttDefaultTableModel,Tab2 tab) {
+	public TTGui(DefaultTableModel ttDefaultTableModel, Tab2 tab) {
 		// TODO Auto-generated constructor stub
 		totalLength = tab.getGuiSize().width;
-		thickness = tab.getGuiSize().height/5;
+		thickness = tab.getGuiSize().height / 5;
 		System.out.println(totalLength);
-		division = (double)totalLength/1440;
+		division = (double) totalLength / 1440;
 		System.out.println(division);
 		this.ttTableModel = ttDefaultTableModel;
 		sortedProducts = new String[5][1000];
@@ -59,31 +59,34 @@ public class TTGui extends JPanel {
 		Products = new FileAccess(Paths.get("TextFiles/Products.txt"));
 		Times = new ArrayList<Integer>();
 		Names = new ArrayList<String>();
+		kilnSizes = new ArrayList<Integer>();
 		ArrayList<String> Temp = new ArrayList<String>();
 		Temp = Products.sReadFileData();
 		for (int i = 0; i < Temp.size(); i++) {
 			// System.out.println(productsTableModel.getValueAt(i, 1));
 			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
 
-				int numOfProduct = Integer.parseInt((String) productsTableModel
-						.getValueAt(i, 1));
+				int numOfProduct = Integer.parseInt((String) productsTableModel.getValueAt(i, 1));
 				int begin = Temp.get(i).indexOf("]") + 1;
-				System.out.println(Integer.parseInt((String) productsTableModel
-						.getValueAt(i, 1)));
+				int kilnStart = Temp.get(i).indexOf("|");
+				// System.out.println(Integer.parseInt((String)
+				// productsTableModel.getValueAt(i, 1)));
 				for (int x = 0; x < numOfProduct; x++) {
 					Names.add((String) productsTableModel.getValueAt(i, 0));
-					Times.add(Integer.parseInt(Temp.get(i).substring(begin)));
+					Times.add(Integer.parseInt(Temp.get(i).substring(begin, kilnStart)));
+					kilnSizes.add(Integer.parseInt(Temp.get(i).substring(kilnStart + 1)));
 				}
 			}
-
+			System.out.print(kilnSizes.get(i) + "\t");
 		}
+		System.out.println("");
 		for (int y = 0; y < Times.size() - 1; y++) {
 			toSwap = true;
 			timeSwap1 = Times.get(y);
 			timeSwap2 = Times.get(y + 1);
 			nameSwap1 = Names.get(y);
 			nameSwap2 = Names.get(y + 1);
-			System.out.println(y);
+			// System.out.println(y);
 			z = y;
 			if (timeSwap2 > timeSwap1) {
 				while (toSwap == true) {
@@ -112,8 +115,7 @@ public class TTGui extends JPanel {
 			for (int y = 0; y < 2; y++) {
 				dayTime[x][y] = 0;
 
-				dayTime[x][0] = getMinutes((String) ttTableModel.getValueAt(x,
-						2))
+				dayTime[x][0] = getMinutes((String) ttTableModel.getValueAt(x, 2))
 						- getMinutes((String) ttTableModel.getValueAt(x, 1));
 			}
 		}
@@ -132,12 +134,10 @@ public class TTGui extends JPanel {
 				added = false;
 				fits = false;
 				for (int c = 0; c < 5; c++) {
-					if (Times.get(b) <= dayTime[c][0] - dayTime[c][1]
-							&& added == false) {
+					if (Times.get(b) <= dayTime[c][0] - dayTime[c][1] && added == false) {
 						// System.out.println("got here" + dayTime[c][1]);
 						for (int d = 0; d < 1000; d++) {
-							if (sortedProducts[c][d].equals(" ")
-									&& added == false) {
+							if (sortedProducts[c][d].equals(" ") && added == false) {
 								sortedProducts[c][d] = Names.get(b);
 								dayTime[c][1] = dayTime[c][1] + Times.get(b);
 								added = true;
@@ -159,24 +159,21 @@ public class TTGui extends JPanel {
 			g.setColor(Color.RED);
 
 			time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
-			g.fillRect((int) (time * division), i * thickness, totalLength
-					- (int) (time * division), thickness + 1);
+			g.fillRect((int) (time * division), i * thickness, totalLength - (int) (time * division), thickness + 1);
 
 			time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
 			g.fillRect(0, i * thickness, (int) (time * division), thickness + 1);
 
 			g.setColor(Color.green);
 
-			g.fillRect((int) (time * division), i * thickness,
-					(int) (dayTime[i][1] * division), thickness + 1);
+			g.fillRect((int) (time * division), i * thickness, (int) (dayTime[i][1] * division), thickness + 1);
 			g.setColor(Color.black);
 			g.drawRect(0, i * thickness, totalLength, thickness);
 		}
 
 	}
 
-	public void update(DefaultTableModel ttDefaultTableModel,
-			DefaultTableModel productsTableModel) {
+	public void update(DefaultTableModel ttDefaultTableModel, DefaultTableModel productsTableModel) {
 		// repaint();
 		this.ttTableModel = ttDefaultTableModel;
 		this.productsTableModel = productsTableModel;
