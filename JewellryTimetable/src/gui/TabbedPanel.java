@@ -33,7 +33,7 @@ public class TabbedPanel extends JFrame {
 		getContentPane().add(topPanel);		// Create the tab pages
 		createtabs();
 		mFrame.setIconImage(Icon.getImage());
-		// Create a tabbed pane
+		//Create a tabbed pane
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Stocks", panel1);
 		tabbedPane.addTab("Timetable", panel2);

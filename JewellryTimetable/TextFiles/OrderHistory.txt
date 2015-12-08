@@ -20,3 +20,6 @@ GlassRed x 2	 total: 1215
 
 2015/11/06 14:12:30
 GlassRed x -100	 total: 1113
+
+2015/11/19 10:35:19
+killalex x 1	 total: 25
