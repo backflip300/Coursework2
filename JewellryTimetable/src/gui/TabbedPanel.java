@@ -14,7 +14,7 @@ public class TabbedPanel extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JPanel panel1, panel2;
 	private JFrame mFrame;
-	static ImageIcon Icon = new ImageIcon("Images/lol.jpg");
+	static ImageIcon Icon = new ImageIcon("Images/test.png");
 
 	public TabbedPanel() {
 		int width = (int) 800;
@@ -23,17 +23,16 @@ public class TabbedPanel extends JFrame {
 		mFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mFrame.getContentPane().setLayout(new MigLayout());
 		setTitle("Inventorize");
-		setSize(width, height);		
+		setSize(width, height);
 		setBackground(Color.gray);
 		mFrame.setIconImage(Icon.getImage());
-		
-		
+
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
-		getContentPane().add(topPanel);		// Create the tab pages
+		getContentPane().add(topPanel); // Create the tab pages
 		createtabs();
 		mFrame.setIconImage(Icon.getImage());
-		//Create a tabbed pane
+		// Create a tabbed pane
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Stocks", panel1);
 		tabbedPane.addTab("Timetable", panel2);
@@ -41,10 +40,8 @@ public class TabbedPanel extends JFrame {
 		mFrame.setIconImage(Icon.getImage());
 
 		topPanel.add(tabbedPane, BorderLayout.NORTH);
-		
 
 	}
-
 
 	private void createtabs() {
 		Tab1 t1 = new Tab1();
@@ -52,8 +49,6 @@ public class TabbedPanel extends JFrame {
 		Tab2 t2 = new Tab2();
 		panel2 = t2.create();
 	}
-
-	
 
 	public static void main(String args[]) {
 		// Create an instance of the test application

@@ -8,7 +8,7 @@ public class Validater {
 	}
 
 	public boolean vSimpleString(String toValidate) {
-		return toValidate.matches("[a-zA-Z]+");
+		return toValidate.matches("[a-zA-Z0-9]+");
 	}
 
 	public boolean vIntRange(int toValidate, int min, int max) {

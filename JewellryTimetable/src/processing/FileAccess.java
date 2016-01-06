@@ -30,7 +30,8 @@ public class FileAccess {
 		}
 		return fileData;
 	}
-	public ArrayList<String> sReadFileData(){
+
+	public ArrayList<String> sReadFileData() {
 		ArrayList<String> fileData = new ArrayList<String>();
 		Charset charset = Charset.defaultCharset();
 		try (BufferedReader reader = Files.newBufferedReader(Location, charset)) {
@@ -48,7 +49,7 @@ public class FileAccess {
 	public void sWriteFileData(String toWrite) {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(
 				Location.toString(), true))) {
-			
+
 			writer.write(toWrite);
 			writer.newLine();
 			writer.close();
@@ -57,25 +58,23 @@ public class FileAccess {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public void sEditline(String toedit, int line){
-		//get old data
+
+	public void sEditline(String toedit, int line) {
+		// get old data
 		ArrayList<String> oldData = new ArrayList<String>();
 		oldData = sReadFileData();
-		//edit line 
+		// edit line
 		oldData.remove(line);
 		oldData.add(line, toedit);
-		
-		
+
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(
 				Location.toString(), false))) {
-		writer.write("");
-		for (int i = 0; i < oldData.size(); i++){
-			writer.write(oldData.get(i));
-			writer.newLine();
-		}
-			
+			writer.write("");
+			for (int i = 0; i < oldData.size(); i++) {
+				writer.write(oldData.get(i));
+				writer.newLine();
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

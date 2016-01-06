@@ -18,7 +18,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
-import processing.GetNewStock;
+import processing.NewProduct;
 import renderers.TTGui;
 import renderers.TTMRenderer;
 import tableModels.Tab2TableModel;
@@ -31,8 +31,8 @@ public class Tab2 {
 	private Tab2TableModel tModel;
 	private timetableTableModel ttModel;
 	private static DefaultTableModel dtablemodel, dtablemodel2;
-	Dimension GuiSize = new Dimension(400, 120);
-	private GetNewStock getNewStock;
+	Dimension GuiSize = new Dimension(600, 200);
+	private NewProduct newProduct;
 	private TTMRenderer cellRenderer;
 	private TTGui ttGui, ttGui2;
 	private Graphics g;
@@ -92,24 +92,26 @@ public class Tab2 {
 
 		// create buttons
 		JButton NewProduct = new JButton("New Product");
+		JButton createTimetable = new JButton("Create Timetable");
+		
 		// NewProduct.setEnabled(false);
 		NewProduct.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				getNewStock = new GetNewStock(dtablemodel);
-				getNewStock.addStock();
+				newProduct = new NewProduct(dtablemodel);
+				newProduct.addStock();
 			}
 		});
 
 		scrollPane.setPreferredSize(new Dimension(200, 450));
 		scrollPane.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
-		ttscrollPane.setPreferredSize(new Dimension(400, 103));
+		ttscrollPane.setPreferredSize(new Dimension(600, 103));
 		tab2.add(scrollPane, "cell 0 0 1 4");
 		tab2.add(ttscrollPane, "cell 1 0 ");
 		tab2.add(ttGui,"cell 1 1");
-		tab2.add(ttGui2, "cell 1 2");
-		tab2.add(NewProduct, "cell 1 3, grow");
+		tab2.add(createTimetable, "cell 1 3,grow");
+		tab2.add(NewProduct, "cell 1 2, grow");
 		// timetablemodel listener
 		ttable.getModel().addTableModelListener(new TableModelListener() {
 

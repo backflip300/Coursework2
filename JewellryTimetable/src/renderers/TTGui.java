@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
@@ -25,12 +27,12 @@ public class TTGui extends JPanel {
 	private int start, end, kilnStart;
 	private String mins;
 	private String nameSwap1, nameSwap2;
-	private int thickness = 30;
+	private int thickness = 60;
 	private int totalLength, kilnSize = 1000, kilnFill = 0;
-	private ArrayList<String> Names;
-	private ArrayList<Integer> Times, kilnSizes;
+	private ArrayList<String> Names, tempNames;
+	private ArrayList<Integer> Times;
 	private int[][] dayTime;
-	private String[][] sortedProducts;
+	private String[][] sortedProducts, key;
 	private FileAccess Products;
 	private int timeSwap1, timeSwap2, ksSwap1, ksSwap2;
 	private int z;
@@ -59,7 +61,7 @@ public class TTGui extends JPanel {
 		Products = new FileAccess(Paths.get("TextFiles/Products.txt"));
 		Times = new ArrayList<Integer>();
 		Names = new ArrayList<String>();
-		kilnSizes = new ArrayList<Integer>();
+
 		ArrayList<String> Temp = new ArrayList<String>();
 		Temp = Products.sReadFileData();
 		for (int i = 0; i < Temp.size(); i++) {
@@ -69,28 +71,21 @@ public class TTGui extends JPanel {
 				int numOfProduct = Integer.parseInt((String) productsTableModel
 						.getValueAt(i, 1));
 				int begin = Temp.get(i).indexOf("]") + 1;
-				int kilnStart = Temp.get(i).indexOf("|");
 				// System.out.println(Integer.parseInt((String)
 				// productsTableModel.getValueAt(i, 1)));
 				for (int x = 0; x < numOfProduct; x++) {
 					Names.add((String) productsTableModel.getValueAt(i, 0));
-					Times.add(Integer.parseInt(Temp.get(i).substring(begin,
-							kilnStart)));
-					kilnSizes.add(Integer.parseInt(Temp.get(i).substring(
-							kilnStart + 1)));
+					Times.add(Integer.parseInt(Temp.get(i).substring(begin)));
 				}
 			}
 
 		}
-		System.out.println("");
 		for (int y = 0; y < Times.size() - 1; y++) {
 			toSwap = true;
 			timeSwap1 = Times.get(y);
 			timeSwap2 = Times.get(y + 1);
 			nameSwap1 = Names.get(y);
 			nameSwap2 = Names.get(y + 1);
-
-			// System.out.println(y);
 			z = y;
 			if (timeSwap2 > timeSwap1) {
 				while (toSwap == true) {
@@ -98,8 +93,6 @@ public class TTGui extends JPanel {
 					Times.set(z + 1, timeSwap1);
 					Names.set(z, nameSwap2);
 					Names.set(z + 1, nameSwap1);
-					kilnSizes.set(z, ksSwap2);
-					kilnSizes.set(z + 1, ksSwap1);
 					if (z == 0) {
 						toSwap = false;
 					} else if (Times.get(z) > Times.get(z - 1) == false) {
@@ -110,9 +103,6 @@ public class TTGui extends JPanel {
 						timeSwap2 = Times.get(z + 1);
 						nameSwap1 = Names.get(z);
 						nameSwap2 = Names.get(z + 1);
-						ksSwap1 = kilnSizes.get(z);
-						ksSwap2 = kilnSizes.get(z + 1);
-
 					}
 				}
 			}
@@ -123,7 +113,6 @@ public class TTGui extends JPanel {
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 2; y++) {
 				dayTime[x][y] = 0;
-
 				dayTime[x][0] = getMinutes((String) ttTableModel.getValueAt(x,
 						2))
 						- getMinutes((String) ttTableModel.getValueAt(x, 1));
@@ -133,7 +122,6 @@ public class TTGui extends JPanel {
 		boolean fits = true;
 		// boolean allAdded = false;
 		boolean added = false;
-
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 1000; y++) {
 				sortedProducts[x][y] = " ";
@@ -152,7 +140,6 @@ public class TTGui extends JPanel {
 									&& added == false) {
 								sortedProducts[c][d] = Names.get(b);
 								dayTime[c][1] = dayTime[c][1] + Times.get(b);
-								kilnFill += kilnSizes.get(b);
 
 								added = true;
 								fits = true;
@@ -196,6 +183,30 @@ public class TTGui extends JPanel {
 		this.productsTableModel = productsTableModel;
 		createTimetable();
 		repaint();
+	}
+
+	public void printTimetable(DefaultTableModel ttDefaultTableModel,
+			DefaultTableModel productsTableModel) {
+		this.ttTableModel = ttDefaultTableModel;
+		this.productsTableModel = productsTableModel;
+		createTimetable();
+		saveImage();
+	}
+
+	private void saveImage() {
+		MakeKey();
+
+	}
+
+	private void MakeKey() {
+		tempNames = new ArrayList<String>();
+		tempNames = Names;
+
+		// add elements to al, including duplicates
+		Set<String> hs = new HashSet<>();
+		hs.addAll(tempNames);
+		tempNames.clear();
+		tempNames.addAll(tempNames);
 	}
 
 	private int getMinutes(String time) {

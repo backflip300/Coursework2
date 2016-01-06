@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import tableModels.NewStockTableModel;
 
-public class GetNewStock {
+public class NewProduct {
 
 	private JFrame frame;
 	private JPanel panel;
@@ -35,15 +35,15 @@ public class GetNewStock {
 	private String newStock;
 	private String Name;
 	private int time;
-	private FileAccess Productsfile = new FileAccess(Paths.get("TextFiles/Products.txt"));
-
+	private FileAccess Productsfile = new FileAccess(
+			Paths.get("TextFiles/Products.txt"));
 	private boolean valid;
 	private Validater Validater;
 	private ArrayList<String> StocksNeeded = new ArrayList<String>();
 
-	public GetNewStock(DefaultTableModel productsTableModel) {
+	public NewProduct(DefaultTableModel productsTableModel) {
 		Validater = new Validater();
-		//productsTableModel = this.productsTableModel;
+		// productsTableModel = this.productsTableModel;
 		this.productsTableModel = productsTableModel;
 		// TODO Auto-generated constructor stub
 	}
@@ -127,7 +127,7 @@ public class GetNewStock {
 				if (StocksNeeded.size() == 0) {
 					valid = false;
 				}
-				
+
 				// sort into format
 				System.out.println(valid);
 				if (valid == true) {
@@ -138,17 +138,16 @@ public class GetNewStock {
 
 					}
 					newStock += "]" + time;
-					//System.out.println(newStock);
 					// add prodcut to products table
 					Tab2.addRow(newStock.substring(0, newStock.indexOf("[")));
-					
+
 					Productsfile.sWriteFileData(newStock);
 				} else {
 					JOptionPane.showMessageDialog(null, "sumtin wrong");
 				}
 
 				// validate inputs of table, name, time to prepare
-				
+
 				// add product to products.txt
 
 			}
