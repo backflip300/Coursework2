@@ -3,7 +3,13 @@ package renderers;
 import gui.Tab2;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -12,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,14 +35,15 @@ public class TTGui extends JPanel {
 	private String mins;
 	private String nameSwap1, nameSwap2;
 	private int thickness = 60;
-	private int totalLength, kilnSize = 1000, kilnFill = 0;
-	private ArrayList<String> Names, tempNames;
+	private int totalLength;
+	private ArrayList<String> Names, key;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
-	private String[][] sortedProducts, key;
+	private String[][] sortedProducts;
 	private FileAccess Products;
-	private int timeSwap1, timeSwap2, ksSwap1, ksSwap2;
+	private int timeSwap1, timeSwap2;
 	private int z;
+	private int totaltime;
 	private boolean toSwap = true;
 	private double division;
 
@@ -57,11 +65,9 @@ public class TTGui extends JPanel {
 	}
 
 	public void createTimetable() {
-
 		Products = new FileAccess(Paths.get("TextFiles/Products.txt"));
 		Times = new ArrayList<Integer>();
 		Names = new ArrayList<String>();
-
 		ArrayList<String> Temp = new ArrayList<String>();
 		Temp = Products.sReadFileData();
 		for (int i = 0; i < Temp.size(); i++) {
@@ -78,7 +84,6 @@ public class TTGui extends JPanel {
 					Times.add(Integer.parseInt(Temp.get(i).substring(begin)));
 				}
 			}
-
 		}
 		for (int y = 0; y < Times.size() - 1; y++) {
 			toSwap = true;
@@ -138,7 +143,8 @@ public class TTGui extends JPanel {
 						for (int d = 0; d < 1000; d++) {
 							if (sortedProducts[c][d].equals(" ")
 									&& added == false) {
-								sortedProducts[c][d] = Names.get(b);
+								sortedProducts[c][d] = Names.get(b) + "|"
+										+ Times.get(b);
 								dayTime[c][1] = dayTime[c][1] + Times.get(b);
 
 								added = true;
@@ -178,10 +184,11 @@ public class TTGui extends JPanel {
 
 	public void update(DefaultTableModel ttDefaultTableModel,
 			DefaultTableModel productsTableModel) {
-		// repaint();
+
 		this.ttTableModel = ttDefaultTableModel;
 		this.productsTableModel = productsTableModel;
 		createTimetable();
+		saveImage();
 		repaint();
 	}
 
@@ -195,18 +202,119 @@ public class TTGui extends JPanel {
 
 	private void saveImage() {
 		MakeKey();
+		MakeTimetable();
+	}
 
+	private void MakeTimetable() {
+		int width = 2339, height = 1654;
+		try {
+			BufferedImage timeSheet = new BufferedImage(width, height,
+					BufferedImage.TYPE_INT_ARGB);
+
+			Graphics2D image = timeSheet.createGraphics();
+
+			Font keyFont = new Font("TimesRoman", Font.BOLD, 30);
+			Font timeFont = new Font("TimesRoman", Font.ITALIC, 20);
+			Font prodNumbers = new Font("TimesRoman", Font.BOLD, 15);
+			image.setFont(keyFont);
+			String keyString = "";
+			FontMetrics fontMetrics = image.getFontMetrics();
+			int stringWidth = fontMetrics.stringWidth(keyString);
+			int stringHeight = fontMetrics.getAscent();
+			image.setPaint(Color.WHITE);
+			image.fillRect(0, 0, width, height);
+			image.setPaint(Color.black);
+			image.drawString("Key:", 100, 100 - stringHeight);
+			int fromtop = 100;
+			int fromleft = 300;
+			int daywidth = 100;
+			int daylength = 1440;
+
+			for (int i = 0; i < key.size(); i++) {
+
+				image.drawString(i + "         " + key.get(i), 100, 100
+						+ stringHeight * i);
+			}
+
+			image.setFont(timeFont);
+			for (int i = 0; i <= 24; i++) {
+				image.drawLine(fromleft + i * 60, fromtop, fromleft + i * 60,
+						fromtop - 20);
+				image.drawString(i + ":00", fromleft + i * 60, fromtop - 25);
+			}
+			image.setFont(prodNumbers);
+			for (int i = 0; i < 5; i++) {
+				image.setPaint(Color.RED);
+				time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
+				System.out.println(time);
+				image.fillRect(fromleft + time, fromtop + i * daywidth,
+						daylength - time, daywidth);
+
+				time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
+				System.out.println(time);
+				image.fillRect(fromleft, fromtop + i * daywidth, time, daywidth);
+
+				image.setPaint(Color.black);
+				totaltime = time;
+				for (int x = 0; x < 1000; x++) {
+					if (sortedProducts[i][x] == " ") {
+						break;
+					} else {
+						System.out.println("tot time: " + totaltime);
+						time = Integer
+								.parseInt(sortedProducts[i][x]
+										.substring(sortedProducts[i][x]
+												.indexOf("|") + 1));
+						System.out.println("time : " + time);
+						System.out.println(fromleft + totaltime);
+						totaltime = totaltime + time;
+						image.drawLine(fromleft + totaltime, fromtop + i
+								* daywidth, fromleft + totaltime, fromtop
+								+ (i + 1) * daywidth);
+						image.drawString(getkey(sortedProducts[i][x].substring(
+								0, sortedProducts[i][x].indexOf("|"))),
+								fromleft + totaltime - (int) (time / 2),
+								fromtop + i * daywidth + (int) (daywidth * 0.5));
+					}
+
+				}
+
+				image.setPaint(Color.black);
+				image.drawLine(fromleft, fromtop + i * daywidth, fromleft
+						+ daylength, fromtop + i * daywidth);
+
+			}
+			image.drawLine(fromleft, fromtop + 5 * daywidth, fromleft
+					+ daylength, fromtop + 5 * daywidth);
+			ImageIO.write(timeSheet, "PNG", new File("Images/Timetable.jpg"));
+
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+
+		System.out.println("we DID IT");
+	}
+
+	private String getkey(String t) {
+		for (int i = 0; i < key.size(); i++) {
+			if (t.equals(key.get(i))) {
+				t = Integer.toString(i);
+				break;
+			}
+		}
+		return t;
 	}
 
 	private void MakeKey() {
-		tempNames = new ArrayList<String>();
-		tempNames = Names;
+		key = new ArrayList<String>();
+		key = Names;
 
 		// add elements to al, including duplicates
 		Set<String> hs = new HashSet<>();
-		hs.addAll(tempNames);
-		tempNames.clear();
-		tempNames.addAll(tempNames);
+		hs.addAll(key);
+		key.clear();
+		key.addAll(hs);
+
 	}
 
 	private int getMinutes(String time) {

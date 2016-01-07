@@ -1,4 +1,3 @@
 RedBlue[/Blue/5/Red/015]45
-RedBlue[/Blue/5/Red/015]45
 Blue[/Blue/025]30
 test3[/Blue/012/Red/03]12
