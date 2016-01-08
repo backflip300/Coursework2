@@ -221,7 +221,7 @@ public class TTGui extends JPanel {
 			FontMetrics fontMetrics = image.getFontMetrics();
 			int stringWidth = fontMetrics.stringWidth(keyString);
 			int stringHeight = fontMetrics.getAscent();
-			image.setPaint(Color.WHITE);
+			image.setPaint(Color.yellow);
 			image.fillRect(0, 0, width, height);
 			image.setPaint(Color.black);
 			image.drawString("Key:", 100, 100 - stringHeight);
