@@ -206,7 +206,7 @@ public class TTGui extends JPanel {
 	}
 
 	private void MakeTimetable() {
-		int width = 2339, height = 1654;
+		int width = 1800, height = 600;
 		try {
 			BufferedImage timeSheet = new BufferedImage(width, height,
 					BufferedImage.TYPE_INT_ARGB);
@@ -221,7 +221,7 @@ public class TTGui extends JPanel {
 			FontMetrics fontMetrics = image.getFontMetrics();
 			int stringWidth = fontMetrics.stringWidth(keyString);
 			int stringHeight = fontMetrics.getAscent();
-			image.setPaint(Color.yellow);
+			image.setPaint(Color.white);
 			image.fillRect(0, 0, width, height);
 			image.setPaint(Color.black);
 			image.drawString("Key:", 100, 100 - stringHeight);
@@ -238,9 +238,15 @@ public class TTGui extends JPanel {
 
 			image.setFont(timeFont);
 			for (int i = 0; i <= 24; i++) {
+				image.setPaint(Color.black);
 				image.drawLine(fromleft + i * 60, fromtop, fromleft + i * 60,
 						fromtop - 20);
 				image.drawString(i + ":00", fromleft + i * 60, fromtop - 25);
+				
+				if (i%2 == 1){
+					image.setPaint(new Color(230, 230, 255));
+					image.fillRect(fromleft + i*60, fromtop, 60, daywidth*5);
+				}
 			}
 			image.setFont(prodNumbers);
 			for (int i = 0; i < 5; i++) {

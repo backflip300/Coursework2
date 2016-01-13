@@ -8,14 +8,33 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * 
+ * @author Edward
+ * @version 1.0 jan9, 2016
+ * 
+ */
+
+@SuppressWarnings("serial")
 public class TabbedPanel extends JFrame {
 
-	private static final long serialVersionUID = 4251822216194254417L;
+	/** JTabbedPane contains both panels */
 	private JTabbedPane tabbedPane;
+	/**
+	 * panel1 is for stock management, panel2 is for product managment and
+	 * timetable creation
+	 */
 	private JPanel panel1, panel2;
+
+	/**
+	 * mFrame is the highest level of the Gui which encompases the tabbed pane
+	 */
 	private JFrame mFrame;
+	/** icon is the thumbnail for the program */
 	static ImageIcon Icon = new ImageIcon("Images/test.png");
 
+	
+	
 	public TabbedPanel() {
 		int width = (int) 800;
 		int height = (int) 540;
@@ -29,7 +48,9 @@ public class TabbedPanel extends JFrame {
 
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
-		getContentPane().add(topPanel); // Create the tab pages
+		getContentPane().add(topPanel);
+
+		// Create the tab pages
 		createtabs();
 		mFrame.setIconImage(Icon.getImage());
 		// Create a tabbed pane
