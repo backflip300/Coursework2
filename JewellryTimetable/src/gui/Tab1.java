@@ -17,7 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import processing.FileAccess;
+import processing.Validater;
 import tableModels.Tab1TableModel;
 import net.miginfocom.swing.MigLayout;
 
@@ -27,6 +29,7 @@ public class Tab1 {
 	private Tab1TableModel tModel;
 	private ScrollTextArea console;
 	private JPanel cPanel;
+	private Validater validater = new Validater();
 	private DefaultTableModel dtablemodel;
 	private FileAccess Stocks, OrderHistory;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -45,7 +48,7 @@ public class Tab1 {
 		tab1 = new JPanel();
 		tab1.setLayout(new MigLayout());
 		// buttons
-		
+
 		JButton restock = new JButton("Restock");
 		JButton newStock = new JButton("New Stock");
 		// scroll area
@@ -60,7 +63,7 @@ public class Tab1 {
 		// table
 
 		tModel = new Tab1TableModel();
-		
+
 		dtablemodel = new DefaultTableModel(tModel.data, new Object[] { "Name",
 				"Current in Stock in /g or /cm", "# to restock" }) {
 			@Override
@@ -68,10 +71,9 @@ public class Tab1 {
 				return column == 2;
 			}
 		};
-	
 
 		// add above to tab1
-		
+
 		tab1.add(restock, "South");
 		tab1.add(newStock, "South");
 		tab1.add(cPanel, "east");
@@ -86,14 +88,42 @@ public class Tab1 {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				String Stock;
+				String number;
+				int entered = 0;
+				while (entered == 0) {
+					Stock = JOptionPane.showInputDialog("name of Stock");
+					System.out.println(Stock);
+					if (validater.vSimpleString(Stock) == true) {
+						number = JOptionPane
+								.showInputDialog("current # in stock");
+						if (validater.vOnlyContainsNumbers(number) == true
+								&& Integer.parseInt(number) >= 0) {
 
-				ArrayList<String> stemp = new ArrayList<String>();
-				FileAccess access = new FileAccess(Paths.get("TextFiles/Stocks.txt"));
-				stemp.add(JOptionPane.showInputDialog("name of Stock"));
-				stemp.add(JOptionPane.showInputDialog("current # in stock"));
-				dtablemodel.addRow(new Object[] { stemp.get(0), stemp.get(1), 0 });
-				access.sWriteFileData(stemp.get(0));
-				access.sWriteFileData(stemp.get(1));
+							ArrayList<String> stemp = new ArrayList<String>();
+							stemp.add(Stock);
+							stemp.add(number);
+							FileAccess access = new FileAccess(Paths
+									.get("TextFiles/Stocks.txt"));
+					
+							dtablemodel.addRow(new Object[] { stemp.get(0), stemp.get(1), 0 });
+							access.sWriteFileData(stemp.get(0));
+							access.sWriteFileData(stemp.get(1));
+							entered = 1;
+						}else if(number == ""){
+							entered = -1;
+							break;
+						}
+						
+
+					} else if (Stock.equals("")) {
+						entered = -1;
+						break;
+					}
+
+				}
+
+				
 			}
 		});
 
@@ -108,7 +138,7 @@ public class Tab1 {
 						dtablemodel.setValueAt("0", x, 2);
 					}
 				}
-				
+
 				ArrayList<String> history = new ArrayList<String>();
 				ArrayList<Integer> cStocks = new ArrayList<Integer>();
 				ArrayList<Integer> rStocks = new ArrayList<Integer>();

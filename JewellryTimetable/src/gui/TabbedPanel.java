@@ -17,7 +17,6 @@ import net.miginfocom.swing.MigLayout;
 
 @SuppressWarnings("serial")
 public class TabbedPanel extends JFrame {
-
 	/** JTabbedPane contains both panels */
 	private JTabbedPane tabbedPane;
 	/**
@@ -25,7 +24,6 @@ public class TabbedPanel extends JFrame {
 	 * timetable creation
 	 */
 	private JPanel panel1, panel2;
-
 	/**
 	 * mFrame is the highest level of the Gui which encompases the tabbed pane
 	 */
