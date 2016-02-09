@@ -1,3 +1,12 @@
 
 2016/01/21 10:39:46
 Blue x 12	 total: 112
+
+2016/02/09 12:34:06
+Red x 45	 total: 145
+123 x 45	 total: 90
+hello x 12	 total: 135
+
+2016/02/09 12:39:51
+Red x -20	 total: 125
+123 x -1	 total: 89

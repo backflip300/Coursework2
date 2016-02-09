@@ -77,8 +77,6 @@ public class TTGui extends JPanel {
 				int numOfProduct = Integer.parseInt((String) productsTableModel
 						.getValueAt(i, 1));
 				int begin = Temp.get(i).indexOf("]") + 1;
-				// System.out.println(Integer.parseInt((String)
-				// productsTableModel.getValueAt(i, 1)));
 				for (int x = 0; x < numOfProduct; x++) {
 					Names.add((String) productsTableModel.getValueAt(i, 0));
 					Times.add(Integer.parseInt(Temp.get(i).substring(begin)));
@@ -251,13 +249,10 @@ public class TTGui extends JPanel {
 			image.setFont(prodNumbers);
 			for (int i = 0; i < 5; i++) {
 				image.setPaint(Color.RED);
-				time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
-				System.out.println(time);
+				time = getMinutes(ttTableModel.getValueAt(i, 2).toString());		
 				image.fillRect(fromleft + time, fromtop + i * daywidth,
 						daylength - time, daywidth);
-
 				time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
-				System.out.println(time);
 				image.fillRect(fromleft, fromtop + i * daywidth, time, daywidth);
 
 				image.setPaint(Color.black);
@@ -265,14 +260,11 @@ public class TTGui extends JPanel {
 				for (int x = 0; x < 1000; x++) {
 					if (sortedProducts[i][x] == " ") {
 						break;
-					} else {
-						System.out.println("tot time: " + totaltime);
+					} else {					
 						time = Integer
 								.parseInt(sortedProducts[i][x]
 										.substring(sortedProducts[i][x]
 												.indexOf("|") + 1));
-						System.out.println("time : " + time);
-						System.out.println(fromleft + totaltime);
 						totaltime = totaltime + time;
 						image.drawLine(fromleft + totaltime, fromtop + i
 								* daywidth, fromleft + totaltime, fromtop
@@ -282,9 +274,7 @@ public class TTGui extends JPanel {
 								fromleft + totaltime - (int) (time / 2),
 								fromtop + i * daywidth + (int) (daywidth * 0.5));
 					}
-
 				}
-
 				image.setPaint(Color.black);
 				image.drawLine(fromleft, fromtop + i * daywidth, fromleft
 						+ daylength, fromtop + i * daywidth);

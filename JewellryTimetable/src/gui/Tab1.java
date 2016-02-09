@@ -131,6 +131,8 @@ public class Tab1 {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				
 				table.editCellAt(0, 2);
 				table.getCellEditor().stopCellEditing();
 				for (int x = 0; x < dtablemodel.getRowCount(); x++) {
@@ -146,6 +148,9 @@ public class Tab1 {
 				String tempcStocks, temprStocks;
 				cStocks.clear();
 				rStocks.clear();
+				
+				
+				try{
 				for (int i = 0; i < dtablemodel.getRowCount(); i++) {
 
 					tempcStocks = dtablemodel.getValueAt(i, 1).toString();
@@ -172,6 +177,8 @@ public class Tab1 {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
 				int dialogResult = JOptionPane.showConfirmDialog(null, confirm,
 						"Comfirmation", dialogButton);
+				
+				
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					for (int ii = 0; ii < dtablemodel.getRowCount(); ii++) {
 						dtablemodel.setValueAt(
@@ -181,7 +188,6 @@ public class Tab1 {
 						Stocks.sEditline(
 								String.valueOf(cStocks.get(ii)
 										+ rStocks.get(ii)), (2 * ii) + 1);
-
 					}
 					OrderHistory.sWriteFileData("\n"
 							+ dateFormat.format(cal.getTime()));
@@ -193,13 +199,16 @@ public class Tab1 {
 						console.appendToOutput(history.get(x) + "\n",
 								Color.BLACK, false);
 					}
-
+					
 				} else {
 
 				}
 				history.clear();
 				cStocks.clear();
 				rStocks.clear();
+			}catch(NumberFormatException e){
+				console.appendToOutput("error: incorrect input (try using just positive numbers)", Color.red, true);
+			}
 			}
 		});
 		return tab1;
