@@ -48,8 +48,8 @@ public class ExtractProduct {
 			if (currentLine.charAt(i) == '/') {
 				numOfStocks++;
 				slashes.add(i);
-				System.out.println("gothere");
-				System.out.println(i);
+				//System.out.println("gothere");
+				//System.out.println(i);
 			}
 		}
 		numOfStocks = numOfStocks / 2;
