@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Product {
 	String Name;
-	String[] stocks;
-	int[] quantity;
-	int time;
-	int profit;
+	public String[] stocks;
+	public int[] quantity;
+	public int time;
+	public int profit;
 	
 	public Product(String Name, String[] stocks, int[] quantity, int time, int profit) {
 		this.Name = Name;
