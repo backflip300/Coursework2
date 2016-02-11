@@ -8,5 +8,3 @@ Orange
 89
 hello
 135
-21
-32

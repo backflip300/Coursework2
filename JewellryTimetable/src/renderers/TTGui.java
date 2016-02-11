@@ -22,25 +22,30 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
+import processing.ExtractProduct;
 import processing.FileAccess;
+import processing.Product;
 
 @SuppressWarnings("serial")
 public class TTGui extends JPanel {
 
 	private DefaultTableModel ttTableModel, productsTableModel;
 
+	private String[] DesiredProducts;
+	private Product[] products;
+	private ExtractProduct pExtractor = new ExtractProduct();
 	private int time;
+	ArrayList<Integer> numOfProduct;
 	private String hours;
-	private int start, end, kilnStart;
 	private String mins;
 	private String nameSwap1, nameSwap2;
 	private int thickness = 60;
 	private int totalLength;
-	private ArrayList<String> Names, key;
+	private ArrayList<String> Names, key,
+			uniqueNames;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
 	private String[][] sortedProducts;
-	private FileAccess Products;
 	private int timeSwap1, timeSwap2;
 	private int z;
 	private int totaltime;
@@ -48,12 +53,10 @@ public class TTGui extends JPanel {
 	private double division;
 
 	public TTGui(DefaultTableModel ttDefaultTableModel, Tab2 tab) {
-		// TODO Auto-generated constructor stub
+
 		totalLength = tab.getGuiSize().width;
 		thickness = tab.getGuiSize().height / 5;
-		System.out.println(totalLength);
 		division = (double) totalLength / 1440;
-		System.out.println(division);
 		this.ttTableModel = ttDefaultTableModel;
 		sortedProducts = new String[5][1000];
 		dayTime = new int[5][2];
@@ -65,24 +68,38 @@ public class TTGui extends JPanel {
 	}
 
 	public void createTimetable() {
-		Products = new FileAccess(Paths.get("TextFiles/Products.txt"));
+		
 		Times = new ArrayList<Integer>();
 		Names = new ArrayList<String>();
-		ArrayList<String> Temp = new ArrayList<String>();
-		Temp = Products.sReadFileData();
-		for (int i = 0; i < Temp.size(); i++) {
-			// System.out.println(productsTableModel.getValueAt(i, 1));
-			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
+		numOfProduct = new ArrayList<Integer>();
+		uniqueNames = new ArrayList<String>();
+		for (int i = 0; i < productsTableModel.getRowCount(); i++) {
 
-				int numOfProduct = Integer.parseInt((String) productsTableModel
-						.getValueAt(i, 1));
-				int begin = Temp.get(i).indexOf("]") + 1;
-				for (int x = 0; x < numOfProduct; x++) {
-					Names.add((String) productsTableModel.getValueAt(i, 0));
-					Times.add(Integer.parseInt(Temp.get(i).substring(begin)));
-				}
+			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
+				
+				numOfProduct.add(Integer.parseInt((String) productsTableModel
+						.getValueAt(i, 1)));
+				uniqueNames.add((String) productsTableModel.getValueAt(i, 0));
+				
+
 			}
 		}
+		DesiredProducts = new String[uniqueNames.size()];
+		
+		for ( int i =  0; i < uniqueNames.size(); i++){
+			DesiredProducts[i] = uniqueNames.get(i);
+		}
+		products = pExtractor.Extractproducts(DesiredProducts);
+		System.out.println(products[0].profit);
+		System.out.println(products.length);
+			for (int i = 0; i < products.length; i++) {
+				System.out.println("i   " + i);
+				for (int x = 0; x < numOfProduct.get(i); x++) {
+					Names.add(products[i].Name);
+					Times.add(products[i].time);
+				}
+			}
+		
 		for (int y = 0; y < Times.size() - 1; y++) {
 			toSwap = true;
 			timeSwap1 = Times.get(y);
@@ -123,7 +140,6 @@ public class TTGui extends JPanel {
 		}
 		// plop into containers
 		boolean fits = true;
-		// boolean allAdded = false;
 		boolean added = false;
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 1000; y++) {
@@ -137,7 +153,6 @@ public class TTGui extends JPanel {
 				for (int c = 0; c < 5; c++) {
 					if (Times.get(b) <= dayTime[c][0] - dayTime[c][1]
 							&& added == false) {
-						// System.out.println("got here" + dayTime[c][1]);
 						for (int d = 0; d < 1000; d++) {
 							if (sortedProducts[c][d].equals(" ")
 									&& added == false) {
@@ -240,16 +255,16 @@ public class TTGui extends JPanel {
 				image.drawLine(fromleft + i * 60, fromtop, fromleft + i * 60,
 						fromtop - 20);
 				image.drawString(i + ":00", fromleft + i * 60, fromtop - 25);
-				
-				if (i%2 == 1){
+
+				if (i % 2 == 1) {
 					image.setPaint(new Color(230, 230, 255));
-					image.fillRect(fromleft + i*60, fromtop, 60, daywidth*5);
+					image.fillRect(fromleft + i * 60, fromtop, 60, daywidth * 5);
 				}
 			}
 			image.setFont(prodNumbers);
 			for (int i = 0; i < 5; i++) {
 				image.setPaint(Color.RED);
-				time = getMinutes(ttTableModel.getValueAt(i, 2).toString());		
+				time = getMinutes(ttTableModel.getValueAt(i, 2).toString());
 				image.fillRect(fromleft + time, fromtop + i * daywidth,
 						daylength - time, daywidth);
 				time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
@@ -260,7 +275,7 @@ public class TTGui extends JPanel {
 				for (int x = 0; x < 1000; x++) {
 					if (sortedProducts[i][x] == " ") {
 						break;
-					} else {					
+					} else {
 						time = Integer
 								.parseInt(sortedProducts[i][x]
 										.substring(sortedProducts[i][x]

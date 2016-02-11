@@ -30,7 +30,7 @@ public class ExtractProduct {
 					quantity = extractQuantity();
 					time = extractTime();
 					profit = extractProfit();
-					products[i] = new Product(Name, stocks, quantity, time,
+					products[x] = new Product(Name, stocks, quantity, time,
 							profit);
 					break;
 				}
@@ -41,15 +41,17 @@ public class ExtractProduct {
 	}
 
 	private void getpoints() {
+		slashes.clear();
 		openBracket = currentLine.indexOf("[");
 		closeBracket = currentLine.indexOf("]");
 		comma = currentLine.indexOf(",");
+		numOfStocks = 0;
 		for (int i = 0; i < currentLine.length(); i++) {
 			if (currentLine.charAt(i) == '/') {
 				numOfStocks++;
 				slashes.add(i);
 				//System.out.println("gothere");
-				//System.out.println(i);
+				System.out.println("size: " + slashes.size());
 			}
 		}
 		numOfStocks = numOfStocks / 2;
@@ -64,6 +66,7 @@ public class ExtractProduct {
 	public String[] extractStocks() {
 		String[] Stocks;
 		Stocks = new String[numOfStocks];
+		System.out.println("stock num: " + numOfStocks);
 		for (int i = 0; i < numOfStocks; i++) {
 			Stocks[i] = currentLine.substring(slashes.get(2 * i) + 1,
 					slashes.get(2 * i + 1));
@@ -75,7 +78,7 @@ public class ExtractProduct {
 
 	public int[] extractQuantity() {
 		int[] Quantity = new int[numOfStocks];;
-		System.out.println(numOfStocks);
+		
 		for (int i = 0; i < numOfStocks - 1; i++) 
 		{
 			System.out.println("\t" + i);

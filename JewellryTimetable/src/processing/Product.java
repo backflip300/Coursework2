@@ -3,7 +3,7 @@ package processing;
 import java.util.ArrayList;
 
 public class Product {
-	String Name;
+	public String Name;
 	public String[] stocks;
 	public int[] quantity;
 	public int time;
