@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -19,13 +20,14 @@ import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
 import processing.NewProduct;
+import processing.Validater;
 import renderers.TTGui;
 import renderers.TTMRenderer;
 import tableModels.Tab2TableModel;
 import tableModels.timetableTableModel;
 
 public class Tab2 {
-
+	private String ErrorMessage;
 	private JPanel tab2;
 	private JTable table, ttable;
 	private Tab2TableModel tModel;
@@ -36,6 +38,7 @@ public class Tab2 {
 	private TTMRenderer cellRenderer;
 	private TTGui ttGui, ttGui2;
 	private Graphics g;
+	Validater validater = new Validater();
 
 	public Tab2() {
 
@@ -81,11 +84,11 @@ public class Tab2 {
 		ttable.setDefaultRenderer(Object.class, cellRenderer);
 
 		// create timetable renderer
-		ttGui = new TTGui(dtablemodel2,this);
+		ttGui = new TTGui(dtablemodel2, this);
 		ttGui.setPreferredSize(GuiSize);
 		ttGui.setBackground(Color.white);
 		ttGui.paint(g);
-		ttGui2 = new TTGui(dtablemodel2,this);
+		ttGui2 = new TTGui(dtablemodel2, this);
 		ttGui2.setPreferredSize(GuiSize);
 		ttGui2.setBackground(Color.white);
 		ttGui2.paint(g);
@@ -93,7 +96,7 @@ public class Tab2 {
 		// create buttons
 		JButton NewProduct = new JButton("New Product");
 		JButton createTimetable = new JButton("Create Timetable");
-		
+
 		// NewProduct.setEnabled(false);
 		NewProduct.addActionListener(new ActionListener() {
 
@@ -109,30 +112,64 @@ public class Tab2 {
 		ttscrollPane.setPreferredSize(new Dimension(600, 103));
 		tab2.add(scrollPane, "cell 0 0 1 4");
 		tab2.add(ttscrollPane, "cell 1 0 ");
-		tab2.add(ttGui,"cell 1 1");
+		tab2.add(ttGui, "cell 1 1");
 		tab2.add(createTimetable, "cell 1 3,grow");
 		tab2.add(NewProduct, "cell 1 2, grow");
+		
+	createTimetable.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				updateTimeTable(true);
+			}
+		});
 		// timetablemodel listener
 		ttable.getModel().addTableModelListener(new TableModelListener() {
 
 			public void tableChanged(TableModelEvent e) {
-				ttGui.update(dtablemodel2, dtablemodel);
-
+				updateTimeTable(false);
 			}
 		});
 		// products table listener
 		table.getModel().addTableModelListener(new TableModelListener() {
-
 			@Override
 			public void tableChanged(TableModelEvent arg0) {
 				// TODO Auto-generated method stub
-				ttGui.update(dtablemodel2, dtablemodel);
+				updateTimeTable(false);
 			}
 		});
-
-		// adding
 		return tab2;
+	}
 
+	private void updateTimeTable(boolean image) {
+
+		if (validInputs() == true) {
+			ttGui.update(dtablemodel2, dtablemodel,image);
+		} else {
+			JOptionPane.showMessageDialog(null, ErrorMessage);
+		}
+	}
+
+	private boolean validInputs() {
+		boolean valid = true;
+		for (int i = 0; i < dtablemodel2.getRowCount();i++){
+			System.out.println(ttable.getValueAt(i, 1));
+			if( !validater.vtime((String)ttable.getValueAt(i, 1)) || !validater.vtime((String)ttable.getValueAt(i, 2))){
+				ErrorMessage  ="Invalid times entered (use format \"00:00\")";
+				
+				valid = false;
+			}
+		}
+		for (int i = 0; i < dtablemodel.getRowCount(); i ++){
+			if (!validater.vOnlyContainsNumbers((String)dtablemodel.getValueAt(i, 1)) || !validater.vIntRange(Integer.parseInt((String)dtablemodel.getValueAt(i, 1)), 0, 10000000))
+					{
+				valid = false;
+				ErrorMessage  ="Invalid product number entered ";
+			}
+		}
+
+		return valid;
 	}
 
 	public static void addRow(String Product) {

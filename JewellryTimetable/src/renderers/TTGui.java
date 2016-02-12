@@ -41,8 +41,7 @@ public class TTGui extends JPanel {
 	private String nameSwap1, nameSwap2;
 	private int thickness = 60;
 	private int totalLength;
-	private ArrayList<String> Names, key,
-			uniqueNames;
+	private ArrayList<String> Names, key, uniqueNames;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
 	private String[][] sortedProducts;
@@ -68,67 +67,12 @@ public class TTGui extends JPanel {
 	}
 
 	public void createTimetable() {
-		
-		Times = new ArrayList<Integer>();
-		Names = new ArrayList<String>();
-		numOfProduct = new ArrayList<Integer>();
-		uniqueNames = new ArrayList<String>();
-		for (int i = 0; i < productsTableModel.getRowCount(); i++) {
+		getDesiredproducts();
+		shuttleSort();
+		filldays();
+	}
 
-			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
-				
-				numOfProduct.add(Integer.parseInt((String) productsTableModel
-						.getValueAt(i, 1)));
-				uniqueNames.add((String) productsTableModel.getValueAt(i, 0));
-				
-
-			}
-		}
-		DesiredProducts = new String[uniqueNames.size()];
-		
-		for ( int i =  0; i < uniqueNames.size(); i++){
-			DesiredProducts[i] = uniqueNames.get(i);
-		}
-		products = pExtractor.Extractproducts(DesiredProducts);
-		System.out.println(products[0].profit);
-		System.out.println(products.length);
-			for (int i = 0; i < products.length; i++) {
-				System.out.println("i   " + i);
-				for (int x = 0; x < numOfProduct.get(i); x++) {
-					Names.add(products[i].Name);
-					Times.add(products[i].time);
-				}
-			}
-		
-		for (int y = 0; y < Times.size() - 1; y++) {
-			toSwap = true;
-			timeSwap1 = Times.get(y);
-			timeSwap2 = Times.get(y + 1);
-			nameSwap1 = Names.get(y);
-			nameSwap2 = Names.get(y + 1);
-			z = y;
-			if (timeSwap2 > timeSwap1) {
-				while (toSwap == true) {
-					Times.set(z, timeSwap2);
-					Times.set(z + 1, timeSwap1);
-					Names.set(z, nameSwap2);
-					Names.set(z + 1, nameSwap1);
-					if (z == 0) {
-						toSwap = false;
-					} else if (Times.get(z) > Times.get(z - 1) == false) {
-						toSwap = false;
-					} else {
-						z--;
-						timeSwap1 = Times.get(z);
-						timeSwap2 = Times.get(z + 1);
-						nameSwap1 = Names.get(z);
-						nameSwap2 = Names.get(z + 1);
-					}
-				}
-			}
-		}
-		// first fit algorithm
-		// create containers
+	private void filldays() {
 		dayTime = new int[5][2];
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 2; y++) {
@@ -168,6 +112,67 @@ public class TTGui extends JPanel {
 				}
 			}
 		}
+
+	}
+
+	private void shuttleSort() {
+		for (int y = 0; y < Times.size() - 1; y++) {
+			toSwap = true;
+			timeSwap1 = Times.get(y);
+			timeSwap2 = Times.get(y + 1);
+			nameSwap1 = Names.get(y);
+			nameSwap2 = Names.get(y + 1);
+			z = y;
+			if (timeSwap2 > timeSwap1) {
+				while (toSwap == true) {
+					Times.set(z, timeSwap2);
+					Times.set(z + 1, timeSwap1);
+					Names.set(z, nameSwap2);
+					Names.set(z + 1, nameSwap1);
+					if (z == 0) {
+						toSwap = false;
+					} else if (Times.get(z) > Times.get(z - 1) == false) {
+						toSwap = false;
+					} else {
+						z--;
+						timeSwap1 = Times.get(z);
+						timeSwap2 = Times.get(z + 1);
+						nameSwap1 = Names.get(z);
+						nameSwap2 = Names.get(z + 1);
+					}
+				}
+			}
+		}
+	}
+
+	private void getDesiredproducts() {
+		Times = new ArrayList<Integer>();
+		Names = new ArrayList<String>();
+		numOfProduct = new ArrayList<Integer>();
+		uniqueNames = new ArrayList<String>();
+		for (int i = 0; i < productsTableModel.getRowCount(); i++) {
+
+			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
+
+				numOfProduct.add(Integer.parseInt((String) productsTableModel
+						.getValueAt(i, 1)));
+				uniqueNames.add((String) productsTableModel.getValueAt(i, 0));
+
+			}
+		}
+		DesiredProducts = new String[uniqueNames.size()];
+
+		for (int i = 0; i < uniqueNames.size(); i++) {
+			DesiredProducts[i] = uniqueNames.get(i);
+		}
+		products = pExtractor.Extractproducts(DesiredProducts);
+		for (int i = 0; i < products.length; i++) {
+			for (int x = 0; x < numOfProduct.get(i); x++) {
+				Names.add(products[i].Name);
+				Times.add(products[i].time);
+			}
+		}
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -196,12 +201,14 @@ public class TTGui extends JPanel {
 	}
 
 	public void update(DefaultTableModel ttDefaultTableModel,
-			DefaultTableModel productsTableModel) {
+			DefaultTableModel productsTableModel, boolean image) {
 
 		this.ttTableModel = ttDefaultTableModel;
 		this.productsTableModel = productsTableModel;
 		createTimetable();
-		saveImage();
+		if (image == true) {
+			saveImage();
+		}
 		repaint();
 	}
 
@@ -306,16 +313,6 @@ public class TTGui extends JPanel {
 		System.out.println("we DID IT");
 	}
 
-	private String getkey(String t) {
-		for (int i = 0; i < key.size(); i++) {
-			if (t.equals(key.get(i))) {
-				t = Integer.toString(i);
-				break;
-			}
-		}
-		return t;
-	}
-
 	private void MakeKey() {
 		key = new ArrayList<String>();
 		key = Names;
@@ -326,6 +323,16 @@ public class TTGui extends JPanel {
 		key.clear();
 		key.addAll(hs);
 
+	}
+
+	private String getkey(String t) {
+		for (int i = 0; i < key.size(); i++) {
+			if (t.equals(key.get(i))) {
+				t = Integer.toString(i);
+				break;
+			}
+		}
+		return t;
 	}
 
 	private int getMinutes(String time) {
