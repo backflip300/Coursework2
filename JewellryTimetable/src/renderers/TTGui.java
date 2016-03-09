@@ -1,6 +1,7 @@
 package renderers;
 
 import gui.Tab2;
+import gui.TabbedPanel;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -30,7 +31,7 @@ import processing.Product;
 public class TTGui extends JPanel {
 
 	private DefaultTableModel ttTableModel, productsTableModel;
-
+	private TabbedPanel t;
 	private String[] DesiredProducts;
 	private Product[] products;
 	private ExtractProduct pExtractor = new ExtractProduct();
@@ -201,8 +202,8 @@ public class TTGui extends JPanel {
 	}
 
 	public void update(DefaultTableModel ttDefaultTableModel,
-			DefaultTableModel productsTableModel, boolean image) {
-
+			DefaultTableModel productsTableModel, boolean image, TabbedPanel t) {
+		this.t = t;
 		this.ttTableModel = ttDefaultTableModel;
 		this.productsTableModel = productsTableModel;
 		createTimetable();
@@ -304,13 +305,14 @@ public class TTGui extends JPanel {
 			}
 			image.drawLine(fromleft, fromtop + 5 * daywidth, fromleft
 					+ daylength, fromtop + 5 * daywidth);
-			ImageIO.write(timeSheet, "PNG", new File("Images/Timetable.jpg"));
+			ImageIO.write(timeSheet, "PNG", new File("Images/Timetable.png"));
 
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		}
-
-		System.out.println("we DID IT");
+		t.updateTimetable();
+		
+		System.out.println("didthis");
 	}
 
 	private void MakeKey() {
