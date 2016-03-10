@@ -27,7 +27,7 @@ import processing.NewProduct;
 import processing.Validater;
 import renderers.TTGui;
 import renderers.TTMRenderer;
-import tableModels.Tab2TableModel;
+import tableModels.ProductTableModel;
 import tableModels.timetableTableModel;
 
 public class Tab2 {
@@ -35,7 +35,7 @@ public class Tab2 {
 	private JPanel tab2;
 	TabbedPanel t;
 	private JTable table, ttable;
-	private Tab2TableModel tModel;
+	private ProductTableModel tModel;
 	private timetableTableModel ttModel;
 	private static DefaultTableModel dtablemodel, dtablemodel2;
 	Dimension GuiSize = new Dimension(600, 200);
@@ -65,7 +65,7 @@ public class Tab2 {
 		//
 
 		// create products table
-		tModel = new Tab2TableModel();
+		tModel = new ProductTableModel();
 		dtablemodel = new DefaultTableModel(tModel.data, new Object[] { "product", "# to produce" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {

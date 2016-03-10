@@ -39,6 +39,34 @@ public class ExtractProduct {
 		return products;
 
 	}
+	
+	public Product[] ExtractAll(){
+		ArrayList<String> fileData = new ArrayList<String>();
+		
+		String Name;
+		String[] stocks;
+		int[] quantity;
+		int time;
+		int profit;
+		fileData = file.sReadFileData();
+		Product[] products = new Product[fileData.size()];
+		for (int i = 0; i < fileData.size(); i++) {
+			currentLine = fileData.get(i);			
+					getpoints();
+					Name = extractName();
+					stocks = extractStocks();
+					quantity = extractQuantity();
+					time = extractTime();
+					profit = extractProfit();
+					products[i] = new Product(Name, stocks, quantity, time,
+							profit);
+					break;			
+		}
+		return products;
+		
+	}
+	
+	
 
 	private void getpoints() {
 		slashes.clear();

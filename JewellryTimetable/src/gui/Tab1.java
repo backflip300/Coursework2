@@ -10,27 +10,25 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
 import processing.FileAccess;
 import processing.Validater;
-import tableModels.Tab1TableModel;
+import tableModels.StockTableModel;
 import net.miginfocom.swing.MigLayout;
 
 public class Tab1 {
 	private JPanel tab1;
-	private JTable table;
-	private Tab1TableModel tModel;
+	private JTable stockTable;
+	private StockTableModel tModel;
 	private ScrollTextArea console;
 	private JPanel cPanel;
 	private Validater validater = new Validater();
-	private DefaultTableModel dtablemodel;
+	private DefaultTableModel stockTableModel;
 	private FileAccess Stocks, OrderHistory;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	Calendar cal = Calendar.getInstance();
@@ -45,12 +43,17 @@ public class Tab1 {
 	@SuppressWarnings("serial")
 	public JPanel create() {
 		// Frame1.setSize(new Dimension);
+		
 		tab1 = new JPanel();
 		tab1.setLayout(new MigLayout());
 		// buttons
 
 		JButton restock = new JButton("Restock");
 		JButton newStock = new JButton("New Stock");
+		JButton deleteStock = new JButton("Delete Stock");
+		
+		//sort out buttons
+	
 		// scroll area
 		cPanel = new JPanel();
 		cPanel.setPreferredSize(new Dimension(300, 400));
@@ -62,9 +65,9 @@ public class Tab1 {
 
 		// table
 
-		tModel = new Tab1TableModel();
-
-		dtablemodel = new DefaultTableModel(tModel.data, new Object[] { "Name",
+		tModel = new StockTableModel();
+		
+		stockTableModel = new DefaultTableModel(tModel.data, new Object[] { "Name",
 				"Current in Stock in /g or /cm", "# to restock" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -72,15 +75,17 @@ public class Tab1 {
 			}
 		};
 
+		stockTable = new JTable(stockTableModel);
+		stockTable.getTableHeader().setReorderingAllowed(false);
+		JScrollPane scrollPane = new JScrollPane(stockTable);
 		// add above to tab1
-
-		tab1.add(restock, "South");
-		tab1.add(newStock, "South");
-		tab1.add(cPanel, "east");
-		table = new JTable(dtablemodel);
-		table.getTableHeader().setReorderingAllowed(false);
-		JScrollPane scrollPane = new JScrollPane(table);
-		tab1.add(scrollPane, BorderLayout.CENTER);
+		tab1.add(scrollPane, "cell 0 0, split 2");
+		tab1.add(cPanel, "cell 0 0");
+		tab1.add(restock, "cell 0 1, split 3,grow");
+		tab1.add(newStock, "cell 0 1 , grow");
+		tab1.add(deleteStock, "cell 0 1,grow");
+		
+		
 
 		// button actions
 
@@ -106,7 +111,7 @@ public class Tab1 {
 							FileAccess access = new FileAccess(Paths
 									.get("TextFiles/Stocks.txt"));
 					
-							dtablemodel.addRow(new Object[] { stemp.get(0), stemp.get(1), 0 });
+							stockTableModel.addRow(new Object[] { stemp.get(0), stemp.get(1), 0 });
 							access.sWriteFileData(stemp.get(0));
 							access.sWriteFileData(stemp.get(1));
 							entered = 1;
@@ -126,18 +131,25 @@ public class Tab1 {
 				
 			}
 		});
-
+		deleteStock.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+		
+				
+			}
+		});
 		restock.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
 				
-				table.editCellAt(0, 2);
-				table.getCellEditor().stopCellEditing();
-				for (int x = 0; x < dtablemodel.getRowCount(); x++) {
-					if ((dtablemodel.getValueAt(x, 2)).equals("")) {
-						dtablemodel.setValueAt("0", x, 2);
+				stockTable.editCellAt(0, 2);
+				stockTable.getCellEditor().stopCellEditing();
+				for (int x = 0; x < stockTableModel.getRowCount(); x++) {
+					if ((stockTableModel.getValueAt(x, 2)).equals("")) {
+						stockTableModel.setValueAt("0", x, 2);
 					}
 				}
 
@@ -151,10 +163,10 @@ public class Tab1 {
 				
 				
 				try{
-				for (int i = 0; i < dtablemodel.getRowCount(); i++) {
+				for (int i = 0; i < stockTableModel.getRowCount(); i++) {
 
-					tempcStocks = dtablemodel.getValueAt(i, 1).toString();
-					temprStocks = dtablemodel.getValueAt(i, 2).toString();
+					tempcStocks = stockTableModel.getValueAt(i, 1).toString();
+					temprStocks = stockTableModel.getValueAt(i, 2).toString();
 					// System.out.println("\n \n \n" + i);
 
 					// System.out.println( "\t" + dtablemodel.getValueAt(i, 2));
@@ -165,10 +177,10 @@ public class Tab1 {
 
 					if (rStocks.get(i) != 0) {
 
-						confirm += "\n" + dtablemodel.getValueAt(i, 0) + " x "
+						confirm += "\n" + stockTableModel.getValueAt(i, 0) + " x "
 								+ rStocks.get(i) + "\t total: "
 								+ (cStocks.get(i) + rStocks.get(i));
-						history.add(dtablemodel.getValueAt(i, 0) + " x "
+						history.add(stockTableModel.getValueAt(i, 0) + " x "
 								+ rStocks.get(i) + "\t total: "
 								+ (cStocks.get(i) + rStocks.get(i)));
 					}
@@ -180,11 +192,11 @@ public class Tab1 {
 				
 				
 				if (dialogResult == JOptionPane.YES_OPTION) {
-					for (int ii = 0; ii < dtablemodel.getRowCount(); ii++) {
-						dtablemodel.setValueAt(
+					for (int ii = 0; ii < stockTableModel.getRowCount(); ii++) {
+						stockTableModel.setValueAt(
 								(Object) (cStocks.get(ii) + rStocks.get(ii)),
 								ii, 1);
-						dtablemodel.setValueAt(0, ii, 2);
+						stockTableModel.setValueAt(0, ii, 2);
 						Stocks.sEditline(
 								String.valueOf(cStocks.get(ii)
 										+ rStocks.get(ii)), (2 * ii) + 1);
