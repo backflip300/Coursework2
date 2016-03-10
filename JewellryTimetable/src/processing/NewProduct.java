@@ -75,6 +75,7 @@ public class NewProduct {
 		// button when data entered(grey out)?
 
 		return newStock;
+
 	}
 
 	private void createTextAreas() {
@@ -142,6 +143,7 @@ public class NewProduct {
 					Tab2.addRow(newStock.substring(0, newStock.indexOf("[")));
 
 					Productsfile.sWriteFileData(newStock);
+					frame.dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "sumtin wrong");
 				}

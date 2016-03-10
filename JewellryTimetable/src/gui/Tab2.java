@@ -22,6 +22,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import net.miginfocom.swing.MigLayout;
+import processing.DeleteProduct;
 import processing.NewProduct;
 import processing.Validater;
 import renderers.TTGui;
@@ -39,6 +40,7 @@ public class Tab2 {
 	private static DefaultTableModel dtablemodel, dtablemodel2;
 	Dimension GuiSize = new Dimension(600, 200);
 	private NewProduct newProduct;
+	private DeleteProduct deleteProduct = new DeleteProduct();
 	private TTMRenderer cellRenderer;
 	private TTGui ttGui, ttGui2;
 	private Graphics g;
@@ -59,6 +61,7 @@ public class Tab2 {
 		tab2 = new JPanel();
 		tab2.setLayout(new MigLayout());
 		tab2.setEnabled(false);
+		
 		//
 
 		// create products table
@@ -101,6 +104,7 @@ public class Tab2 {
 		JButton OpenTimetable= new JButton("Open Timetable");
 		JButton NewProduct = new JButton("New Product");
 		JButton createTimetable = new JButton("Create new Timetable");
+		JButton DeleteProduct = new JButton("Delete Product");
 
 		// NewProduct.setEnabled(false);
 		NewProduct.addActionListener(new ActionListener() {
@@ -109,16 +113,18 @@ public class Tab2 {
 			public void actionPerformed(ActionEvent arg0) {
 				newProduct = new NewProduct(dtablemodel);
 				newProduct.addStock();
+				
 			}
 		});
-
+		
 		scrollPane.setPreferredSize(new Dimension(200, 450));
 		scrollPane.setAlignmentY(JComponent.BOTTOM_ALIGNMENT);
 		ttscrollPane.setPreferredSize(new Dimension(600, 103));
 		tab2.add(scrollPane, "cell 0 0 1 5");
 		tab2.add(ttscrollPane, "cell 1 0 ");
 		tab2.add(ttGui, "cell 1 1");		
-		tab2.add(NewProduct, "cell 1 2, grow");
+		tab2.add(NewProduct, "cell 1 2, split 2 ,Grow");
+		tab2.add(DeleteProduct, "cell 1 2, Grow");
 		tab2.add(createTimetable, "cell 1 3,grow");
 		tab2.add(OpenTimetable, "cell 1 4, grow");
 
@@ -150,6 +156,18 @@ public class Tab2 {
 				if (confirm == JOptionPane.YES_OPTION)
 					updateTimeTable(true);
 
+			}
+		});
+		
+		DeleteProduct.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				boolean deleted = false;
+				deleted = deleteProduct.delete(dtablemodel);
+				if(deleted == false){
+					JOptionPane.showMessageDialog(null, "Product not found");
+				}
 			}
 		});
 		// timetablemodel listener

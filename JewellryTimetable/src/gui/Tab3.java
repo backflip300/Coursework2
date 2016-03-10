@@ -1,10 +1,7 @@
 package gui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
 import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,7 +22,7 @@ public class Tab3 extends JComponent {
 	public Tab3() {
 		try {
 			image = ImageIO.read(new File("Images/Timetable.png"));
-			scaledImage = image.getScaledInstance(770, 470, Image.SCALE_SMOOTH);
+			scaledImage = image.getScaledInstance(770, 470, Image.SCALE_AREA_AVERAGING);
 		} catch (IOException e) {		
 		}
 	}

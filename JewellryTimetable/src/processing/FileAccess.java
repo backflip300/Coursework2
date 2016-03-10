@@ -80,7 +80,25 @@ public class FileAccess {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+	public void sRemoveLine(int line) {
+		ArrayList<String> oldData = new ArrayList<String>();
+		oldData = sReadFileData();
+		// edit line
+		oldData.remove(line);
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(
+				Location.toString(), false))) {
+			writer.write("");
+			for (int i = 0; i < oldData.size(); i++) {
+				writer.write(oldData.get(i));
+				writer.newLine();
+			}
+			writer.write("");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -12,17 +12,9 @@ import net.miginfocom.swing.MigLayout;
  * 
  * @author Edward
  * @version 1.0 jan9, 2016
- * 
+ *
  */
 
-/**
- * @author Edward
- *
- */
-/**
- * @author Edward
- *
- */
 @SuppressWarnings("serial")
 public class TabbedPanel extends JFrame {
 	/** JTabbedPane contains both panels */
