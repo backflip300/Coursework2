@@ -1,13 +1,3 @@
-Blue
-112
-Red
-125
-Orange
-100
-123
-89
-hello
-159
 12
-dwa
-12
+blue
+0

@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 import tableModels.StockTableModel;
 
@@ -15,35 +16,40 @@ public class DeleteStock {
 	ArrayList<String> usingProducts = new ArrayList<String>();
 	private String toDelete;
 	private boolean used, exists;
-	private S
+	private int lineToDelete;
+
 	public DeleteStock() {
 
 	}
 
-	public void delete(StockTableModel table) {
-
-		used = false;
+	public void delete(DefaultTableModel table) {
+		exists = false;
 		stocks = stocksFile.sReadFileData();
 		toDelete = JOptionPane.showInputDialog("Enter name of stock to delete");
 		products = pExtractor.ExtractAll();
 
-		Search: for (Product product : products) {
+		for (Product product : products) {
 			for (String stock : product.stocks) {
 				if (stock.equalsIgnoreCase(toDelete)) {
-					used = true;
-					break Search;
+					JOptionPane.showMessageDialog(null, "Cannot delete stock: still in use in");
+					return;
 				}
 			}
-
 		}
 
-		if (used == false) {
-			for (int i = 0;i < stocks.size();stocks++) {
+		if (!used) {
+			for (int i = 0; i < stocks.size(); i++) {
 				if (stocks.get(i).equalsIgnoreCase(toDelete)) {
-					lineToDelete = i;
+					table.removeRow(i/2);
+					stocksFile.sRemoveLine(i);
+					stocksFile.sRemoveLine(i);
+					exists = true;
+					break;
 				}
-
 			}
+		} else {
+			
+			JOptionPane.showMessageDialog(null, "Cannot delete stock: does not exist");
 		}
 	}
 
