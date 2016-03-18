@@ -1,6 +1,5 @@
 package processing;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -18,7 +17,6 @@ public class ExtractProduct {
 		String[] stocks;
 		int[] quantity;
 		int time;
-		int profit;
 		fileData = file.sReadFileData();
 		for (int i = 0; i < fileData.size(); i++) {
 			currentLine = fileData.get(i);
@@ -29,9 +27,7 @@ public class ExtractProduct {
 					stocks = extractStocks();
 					quantity = extractQuantity();
 					time = extractTime();
-					profit = extractProfit();
-					products[x] = new Product(Name, stocks, quantity, time,
-							profit);
+					products[x] = new Product(Name, stocks, quantity, time);
 					break;
 				}
 			}
@@ -47,7 +43,7 @@ public class ExtractProduct {
 		String[] stocks;
 		int[] quantity;
 		int time;
-		int profit;
+	
 		fileData = file.sReadFileData();
 		Product[] products = new Product[fileData.size()];
 		for (int i = 0; i < fileData.size(); i++) {
@@ -57,9 +53,8 @@ public class ExtractProduct {
 					stocks = extractStocks();
 					quantity = extractQuantity();
 					time = extractTime();
-					profit = extractProfit();
-					products[i] = new Product(Name, stocks, quantity, time,
-							profit);
+					
+					products[i] = new Product(Name, stocks, quantity, time);
 					break;			
 		}
 		return products;
@@ -72,13 +67,11 @@ public class ExtractProduct {
 		slashes.clear();
 		openBracket = currentLine.indexOf("[");
 		closeBracket = currentLine.indexOf("]");
-		comma = currentLine.indexOf(",");
 		numOfStocks = 0;
 		for (int i = 0; i < currentLine.length(); i++) {
 			if (currentLine.charAt(i) == '/') {
 				numOfStocks++;
 				slashes.add(i);
-				//System.out.println("gothere");
 				System.out.println("size: " + slashes.size());
 			}
 		}
@@ -109,9 +102,6 @@ public class ExtractProduct {
 		
 		for (int i = 0; i < numOfStocks - 1; i++) 
 		{
-			System.out.println("\t" + i);
-			System.out.println(currentLine.substring(
-					slashes.get(2 * i + 1) + 1, slashes.get(2 * i + 2)));
 			Quantity[i] = Integer.parseInt(currentLine.substring(
 					slashes.get((2 * i) + 1) + 1, slashes.get(2 * i + 2)));
 		}
@@ -122,15 +112,7 @@ public class ExtractProduct {
 
 	public int extractTime() {
 		int time;
-		time = Integer.parseInt(currentLine.substring(closeBracket + 1, comma));
+		time = Integer.parseInt(currentLine.substring(closeBracket + 1));
 		return time;
-	}
-
-	public int extractProfit() {
-		int profit;
-		
-		profit = Integer.parseInt(currentLine.substring(comma + 1));
-		
-		return profit;
 	}
 }

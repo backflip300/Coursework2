@@ -15,15 +15,13 @@ public class DeleteStock {
 	ArrayList<String> stocks = new ArrayList<String>();
 	ArrayList<String> usingProducts = new ArrayList<String>();
 	private String toDelete;
-	private boolean used, exists;
-	private int lineToDelete;
+	private boolean used;
 
 	public DeleteStock() {
 
 	}
 
 	public void delete(DefaultTableModel table) {
-		exists = false;
 		stocks = stocksFile.sReadFileData();
 		toDelete = JOptionPane.showInputDialog("Enter name of stock to delete");
 		products = pExtractor.ExtractAll();
@@ -43,7 +41,6 @@ public class DeleteStock {
 					table.removeRow(i/2);
 					stocksFile.sRemoveLine(i);
 					stocksFile.sRemoveLine(i);
-					exists = true;
 					break;
 				}
 			}

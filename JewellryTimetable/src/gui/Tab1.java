@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -70,8 +71,8 @@ public class Tab1 {
 
 		tModel = new StockTableModel();
 
-		stockTableModel = new DefaultTableModel(tModel.data,
-				new Object[] { "Name", "Current in Stock in /g or /cm", "# to restock" }) {
+		stockTableModel = new DefaultTableModel(tModel.data, new Object[] {
+				"Name", "Current in Stock in /g or /cm", "# to restock" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 2;
@@ -101,17 +102,18 @@ public class Tab1 {
 					Stock = JOptionPane.showInputDialog("name of Stock");
 					System.out.println(Stock);
 					if (validater.vSimpleString(Stock) == true) {
-						number = JOptionPane.showInputDialog("current # in stock");
-						if (validater.vOnlyContainsNumbers(number) == true && Integer.parseInt(number) >= 0) {
+						number = JOptionPane
+								.showInputDialog("current # in stock");
+						if (validater.vOnlyContainsNumbers(number) == true
+								&& Integer.parseInt(number) >= 0) {
 
-							ArrayList<String> stemp = new ArrayList<String>();
-							stemp.add(Stock);
-							stemp.add(number);
-							FileAccess access = new FileAccess(Paths.get("TextFiles/Stocks.txt"));
+							FileAccess access = new FileAccess(Paths
+									.get("TextFiles/Stocks.txt"));
 
-							stockTableModel.addRow(new Object[] { stemp.get(0), stemp.get(1), 0 });
-							access.sWriteFileData(stemp.get(0));
-							access.sWriteFileData(stemp.get(1));
+							stockTableModel.addRow(new Object[] { Stock,
+									number, 0 });
+							access.sWriteFileData(Stock);
+							access.sWriteFileData(number);
 							entered = 1;
 						} else if (number == "") {
 							entered = -1;
@@ -139,8 +141,11 @@ public class Tab1 {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+				// stop cell editing
 				stockTable.editCellAt(0, 2);
 				stockTable.getCellEditor().stopCellEditing();
+
+				// set null values to 0
 				for (int x = 0; x < stockTableModel.getRowCount(); x++) {
 					if ((stockTableModel.getValueAt(x, 2)).equals("")) {
 						stockTableModel.setValueAt("0", x, 2);
@@ -158,40 +163,46 @@ public class Tab1 {
 				try {
 					for (int i = 0; i < stockTableModel.getRowCount(); i++) {
 
-						tempcStocks = stockTableModel.getValueAt(i, 1).toString();
-						temprStocks = stockTableModel.getValueAt(i, 2).toString();
-						// System.out.println("\n \n \n" + i);
-
-						// System.out.println( "\t" + dtablemodel.getValueAt(i,
-						// 2));
-
+						tempcStocks = stockTableModel.getValueAt(i, 1)
+								.toString();
+						temprStocks = stockTableModel.getValueAt(i, 2)
+								.toString();
 						cStocks.add(Integer.parseInt(tempcStocks));
-
 						rStocks.add(Integer.parseInt(temprStocks));
 
 						if (rStocks.get(i) != 0) {
-
-							confirm += "\n" + stockTableModel.getValueAt(i, 0) + " x " + rStocks.get(i) + "\t total: "
+							confirm += "\n" + stockTableModel.getValueAt(i, 0)
+									+ " x " + rStocks.get(i) + "\t total: "
 									+ (cStocks.get(i) + rStocks.get(i));
-							history.add(stockTableModel.getValueAt(i, 0) + " x " + rStocks.get(i) + "\t total: "
+							history.add(stockTableModel.getValueAt(i, 0)
+									+ " x " + rStocks.get(i) + "\t total: "
 									+ (cStocks.get(i) + rStocks.get(i)));
 						}
 					}
 
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null, confirm, "Comfirmation", dialogButton);
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							confirm, "Comfirmation", dialogButton);
 
 					if (dialogResult == JOptionPane.YES_OPTION) {
 						for (int ii = 0; ii < stockTableModel.getRowCount(); ii++) {
-							stockTableModel.setValueAt((Object) (cStocks.get(ii) + rStocks.get(ii)), ii, 1);
+							stockTableModel.setValueAt(
+									(Object) (cStocks.get(ii) + rStocks.get(ii)),
+									ii, 1);
 							stockTableModel.setValueAt(0, ii, 2);
-							Stocks.sEditline(String.valueOf(cStocks.get(ii) + rStocks.get(ii)), (2 * ii) + 1);
+							Stocks.sEditline(
+									String.valueOf(cStocks.get(ii)
+											+ rStocks.get(ii)), (2 * ii) + 1);
 						}
-						OrderHistory.sWriteFileData("\n" + dateFormat.format(cal.getTime()));
-						console.appendToOutput("\n" + dateFormat.format(cal.getTime()) + "\n", Color.black, false);
+						OrderHistory.sWriteFileData("\n"
+								+ dateFormat.format(cal.getTime()));
+						console.appendToOutput(
+								"\n" + dateFormat.format(cal.getTime()) + "\n",
+								Color.black, false);
 						for (int x = 0; x < history.size(); x++) {
 							OrderHistory.sWriteFileData(history.get(x));
-							console.appendToOutput(history.get(x) + "\n", Color.BLACK, false);
+							console.appendToOutput(history.get(x) + "\n",
+									Color.BLACK, false);
 						}
 
 					} else {
@@ -201,18 +212,31 @@ public class Tab1 {
 					cStocks.clear();
 					rStocks.clear();
 				} catch (NumberFormatException e) {
-					console.appendToOutput("error: incorrect input (try using just positive numbers)", Color.red, true);
+					console.appendToOutput(
+							"error: incorrect input (try using just positive numbers) \n",
+							Color.red, true);
 				}
 			}
 		});
 		return tab1;
 	}
 
+	public void update() {
+		ArrayList<String> stockFile = new ArrayList<String>();
+		stockFile = Stocks.sReadFileData();
+		for (int i = 0; i < stockFile.size()/2; i++) {
+			System.out.println("gothere");
+			stockTable.setValueAt( stockFile.get(2*i + 1),i, 1);
+			
+		}
+	}
+
 	private void getOrderHistory() {
 		ArrayList<String> tOrderHistory = new ArrayList<String>();
 		tOrderHistory = OrderHistory.sReadFileData();
 		for (int i = 0; i < tOrderHistory.size(); i++) {
-			console.appendToOutput(tOrderHistory.get(i) + "\n", Color.BLACK, false);
+			console.appendToOutput(tOrderHistory.get(i) + "\n", Color.BLACK,
+					false);
 		}
 	}
 }

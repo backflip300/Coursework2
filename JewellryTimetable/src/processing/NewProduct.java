@@ -27,7 +27,7 @@ public class NewProduct {
 	private JPanel panel;
 	private JTable stocksTable;
 	private NewStockTableModel nsTableModel;
-	private DefaultTableModel dTableModel, productsTableModel;
+	private DefaultTableModel dTableModel;
 	private JScrollPane scrollPane;
 	private JButton addProduct;
 	private JTextField tName, tTime;
@@ -44,8 +44,6 @@ public class NewProduct {
 	public NewProduct(DefaultTableModel productsTableModel) {
 		Validater = new Validater();
 		// productsTableModel = this.productsTableModel;
-		this.productsTableModel = productsTableModel;
-		// TODO Auto-generated constructor stub
 	}
 
 	public String addStock() {
@@ -88,9 +86,7 @@ public class NewProduct {
 
 	private void createButton() {
 		addProduct = new JButton("Add Product");
-
 		addProduct.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				valid = true;
@@ -104,12 +100,10 @@ public class NewProduct {
 				// time validated
 				if (Validater.vOnlyContainsNumbers(tTime.getText()) == true) {
 					time = Integer.parseInt(tTime.getText());
-					if (time <= 0) {
+					if (time <= 0)
 						valid = false;
-					}
-				} else {
+				} else
 					valid = false;
-				}
 				// stocks needed validated
 				StocksNeeded.clear();
 				for (int i = 0; i < nsTableModel.getRowCount(); i++) {

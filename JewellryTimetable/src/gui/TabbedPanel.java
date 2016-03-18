@@ -2,10 +2,14 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -59,7 +63,7 @@ public class TabbedPanel extends JFrame {
 		tabbedPane.addTab("Stocks", panel1);
 		tabbedPane.addTab("Products", panel2);
 		tabbedPane.addTab("Timetable", panel3);
-
+		tabbedPane.addChangeListener(tabchange);
 		mFrame.setIconImage(Icon.getImage());
 
 		topPanel.add(tabbedPane, BorderLayout.NORTH);
@@ -82,6 +86,7 @@ public class TabbedPanel extends JFrame {
 		panel3 = t3.create();
 		tabbedPane.remove(2);
 		tabbedPane.addTab("Timetable", panel3);
+		
 	}
 	/**
 	 * 
@@ -90,7 +95,22 @@ public class TabbedPanel extends JFrame {
 	public void setPanel3(JPanel panel3) {
 		this.panel3 = panel3;
 	}
-
+	
+	
+	ChangeListener tabchange = new ChangeListener() {
+		
+		@Override
+		//updates stock incase of change changed
+		public void stateChanged(ChangeEvent changeEvent) {
+			  JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+		        int index = sourceTabbedPane.getSelectedIndex();
+		        t1.update();
+		}
+	};
+	
+	
+	
+	
 	public static void main(String args[]) {
 		// Create an instance of the test application
 		TabbedPanel mainFrame = new TabbedPanel();

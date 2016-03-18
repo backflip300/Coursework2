@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,19 +39,25 @@ public class TTGui extends JPanel {
 	private ExtractProduct pExtractor = new ExtractProduct();
 	private int time;
 	ArrayList<Integer> numOfProduct;
+	private FileAccess stocksFile = new FileAccess(
+			Paths.get("TextFiles/Stocks.txt"));
 	private String hours;
 	private String mins;
+	private Color timetablecolor = Color.green;
 	private String nameSwap1, nameSwap2;
 	private int thickness = 60;
 	private int totalLength;
-	private ArrayList<String> Names, key, uniqueNames;
+	private ArrayList<String> Names, key, insufficientStock;
 	private ArrayList<Integer> Times;
 	private int[][] dayTime;
 	private String[][] sortedProducts;
 	private int timeSwap1, timeSwap2;
 	private int z;
+
+	// Quantity of each stock
+	private ArrayList<Integer> stockAmount = new ArrayList<Integer>();
 	private int totaltime;
-	private boolean toSwap = true;
+	private boolean toSwap = true, fits, enoughstock;
 	private double division;
 
 	public TTGui(DefaultTableModel ttDefaultTableModel, Tab2 tab) {
@@ -68,9 +76,64 @@ public class TTGui extends JPanel {
 	}
 
 	public void createTimetable() {
+		timetablecolor = Color.green;
 		getDesiredproducts();
 		shuttleSort();
 		filldays();
+		if (fits = true) {
+			checkStock();
+		}
+
+	}
+
+	private void checkStock() {
+
+		// temporary array hold text file
+		ArrayList<String> stockFile = new ArrayList<String>();
+		// name of each stock
+		ArrayList<String> stockName = new ArrayList<String>();
+		// clear Arraylists
+		stockFile.clear();
+		stockName.clear();
+		stockAmount.clear();
+
+		insufficientStock = new ArrayList<String>();
+		stockFile = stocksFile.sReadFileData();
+		// Add names and quantities of each stock
+		for (int i = 0; i < stockFile.size() / 2; i++) {
+			stockName.add(stockFile.get(2 * i));
+			stockAmount.add(Integer.parseInt(stockFile.get(2 * i + 1)));
+		}
+		// amount of each stock to be take away
+		int totalAmount = 0;
+		// take away each stock needed by products being produced
+		for (Product toProduce : products) {
+			int i = 0;
+
+			for (int s = 0; s < toProduce.stocks.length; s++) {
+
+				totalAmount = numOfProduct.get(i) * toProduce.quantity[s];
+				// remove from product
+				for (int x = 0; x < stockName.size(); x++) {
+					if (stockName.get(x).equals(toProduce.stocks[s])) {
+						stockAmount.set(x, stockAmount.get(x) - totalAmount);
+					}
+				}
+
+			}
+			i++;
+		}
+
+		// check if all products are still non-negative
+		enoughstock = true;
+		for (int j = 0; j < stockAmount.size(); j++) {
+
+			if (stockAmount.get(j) < 0) {
+				insufficientStock.add(stockName.get(j));
+				enoughstock = false;
+			}
+		}
+
 	}
 
 	private void filldays() {
@@ -84,14 +147,14 @@ public class TTGui extends JPanel {
 			}
 		}
 		// plop into containers
-		boolean fits = true;
+		fits = true;
 		boolean added = false;
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 1000; y++) {
 				sortedProducts[x][y] = " ";
 			}
 		}
-		for (int b = 0; b < Names.size(); b++) {
+		fitting: for (int b = 0; b < Names.size(); b++) {
 			if (fits == true) {
 				added = false;
 				fits = false;
@@ -111,6 +174,11 @@ public class TTGui extends JPanel {
 						}
 					}
 				}
+
+			}
+			System.out.println(fits);
+			if (fits == false) {
+				break fitting;
 			}
 		}
 
@@ -147,10 +215,11 @@ public class TTGui extends JPanel {
 	}
 
 	private void getDesiredproducts() {
-		Times = new ArrayList<Integer>();
+
 		Names = new ArrayList<String>();
+		Times = new ArrayList<Integer>();
 		numOfProduct = new ArrayList<Integer>();
-		uniqueNames = new ArrayList<String>();
+		ArrayList<String> uniqueNames = new ArrayList<String>();
 		for (int i = 0; i < productsTableModel.getRowCount(); i++) {
 
 			if ((productsTableModel.getValueAt(i, 1)).toString() != "0") {
@@ -191,7 +260,7 @@ public class TTGui extends JPanel {
 			time = getMinutes(ttTableModel.getValueAt(i, 1).toString());
 			g.fillRect(0, i * thickness, (int) (time * division), thickness + 1);
 
-			g.setColor(Color.green);
+			g.setColor(timetablecolor);
 
 			g.fillRect((int) (time * division), i * thickness,
 					(int) (dayTime[i][1] * division), thickness + 1);
@@ -201,16 +270,46 @@ public class TTGui extends JPanel {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public void update(DefaultTableModel ttDefaultTableModel,
-			DefaultTableModel productsTableModel, boolean image, TabbedPanel t) {
+			DefaultTableModel productsTableModel, boolean create,
+			TabbedPanel t, JButton createtimetable) {
 		this.t = t;
 		this.ttTableModel = ttDefaultTableModel;
 		this.productsTableModel = productsTableModel;
 		createTimetable();
-		if (image == true) {
-			saveImage();
+		String buttonText = "";
+		if (fits == false) {
+			timetablecolor = Color.red;
+
+			createtimetable.setEnabled(false);
+		} else if (enoughstock == false) {
+
+			buttonText = "insufficient stock: ";
+			for (String insufficient : insufficientStock) {
+				buttonText = buttonText + insufficient + ", ";
+			}
+			createtimetable.setEnabled(false);
+		} else {
+			buttonText = "Create new timetable";
+			createtimetable.setEnabled(true);
 		}
+		createtimetable.setText(buttonText);
+		if (create == true) {
+			saveImage();
+			removestocks();
+		}
+
 		repaint();
+	}
+
+	private void removestocks() {
+		System.out.println(stockAmount.size());
+		for (int i = 0; i < stockAmount.size(); i++) {
+			System.out.println(stockAmount.get(i));
+			stocksFile.sEditline(stockAmount.get(i).toString(), 2 * i + 1);
+		}
+
 	}
 
 	public void printTimetable(DefaultTableModel ttDefaultTableModel,
@@ -311,7 +410,7 @@ public class TTGui extends JPanel {
 			ie.printStackTrace();
 		}
 		t.updateTimetable();
-		
+
 		System.out.println("didthis");
 	}
 
