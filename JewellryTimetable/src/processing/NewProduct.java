@@ -21,45 +21,80 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import tableModels.NewStockTableModel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NewProduct.
+ */
 public class NewProduct {
 
+	/** The frame. */
 	private JFrame frame;
-	private JPanel panel;
-	private JTable stocksTable;
-	private NewStockTableModel nsTableModel;
-	private DefaultTableModel dTableModel;
-	private JScrollPane scrollPane;
-	private JButton addProduct;
-	private JTextField tName, tTime;
-	private JLabel lName, lTime;
-	private String newStock;
-	private String Name;
-	private int time;
-	private FileAccess Productsfile = new FileAccess(
-			Paths.get("TextFiles/Products.txt"));
-	private boolean valid;
-	private Validater Validater;
-	private ArrayList<String> StocksNeeded = new ArrayList<String>();
 
+	/**
+	 * The stocks table displays current stocks and allows input of how many are
+	 * required to produce the product.
+	 */
+	private JTable stocksTable;
+
+	/** The new stock table model. */
+	private NewStockTableModel newStockTableModel;
+
+	/** The default table model. */
+	private DefaultTableModel defaultTableModel;
+
+	/** The scroll pane which contains the stocks table. */
+	private JScrollPane scrollPane;
+
+	/** The add product button when all inputs have been added. */
+	private JButton addProduct;
+
+	/** The tTime allows input of how long the product takes to create */
+	private JTextField tTime;
+
+	/** The tName allows input of the name of the product. */
+	private JTextField tName;
+	/** The l time defines . */
+	private JLabel lTime;
+
+	/** The lName labels the respective input text field. */
+	private JLabel lName;
+	/** The new stock labels the respective input text field. */
+	private String newStock;
+
+	/** The name of the product. */
+	private String name;
+
+	/**
+	 * Instantiates a new new product.
+	 *
+	 * @param productsTableModel
+	 *            the products table model
+	 */
 	public NewProduct(DefaultTableModel productsTableModel) {
-		Validater = new Validater();
+
 		// productsTableModel = this.productsTableModel;
 	}
 
+	/**
+	 * Attempts to create new stock.
+	 *
+	 * @return the string
+	 */
 	public String addStock() {
 
-		// create gui
-		// make frame and panel
+		// Create gui.
+		// Make frame and panel.
 		createFrame();
+		JPanel panel;
 		panel = new JPanel();
 		panel.setLayout(new MigLayout());
 
-		// table & button
+		// Create table & button.
 		createTable();
 		createButton();
-		// text area for name and time
+		// Create text areas for name and time.
 		createTextAreas();
-		// put all together
+		// Add everything to the jpanel.
 		panel.add(scrollPane, "west");
 		panel.add(addProduct, "south");
 		panel.add(lName, "wrap");
@@ -76,6 +111,9 @@ public class NewProduct {
 
 	}
 
+	/**
+	 * Creates the text areas.
+	 */
 	private void createTextAreas() {
 		tName = new JTextField(15);
 		tTime = new JTextField(15);
@@ -84,38 +122,43 @@ public class NewProduct {
 
 	}
 
+	/**
+	 * Creates the button.
+	 */
 	private void createButton() {
+
 		addProduct = new JButton("Add Product");
+
+		// Add action Listener to button.
 		addProduct.addActionListener(new ActionListener() {
+			// validates inputs and then creates new product if
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				valid = true;
 
-				// name validated
-				if (Validater.vSimpleString(tName.getText()) == true) {
-					Name = tName.getText();
+				Validator Validator = new Validator();
+				ArrayList<String> StocksNeeded = new ArrayList<String>();
+				boolean valid = true;
+				int time = 0;
+				// Validate name.
+				if (Validator.vSimpleString(tName.getText()) == true) {
+					name = tName.getText();
 				} else {
 					valid = false;
 				}
-				// time validated
-				if (Validater.vOnlyContainsNumbers(tTime.getText()) == true) {
+				// Validate time.
+				if (Validator.vOnlyContainsNumbers(tTime.getText()) == true) {
 					time = Integer.parseInt(tTime.getText());
 					if (time <= 0)
 						valid = false;
 				} else
 					valid = false;
-				// stocks needed validated
+				// Validate stocks needed.
 				StocksNeeded.clear();
-				for (int i = 0; i < nsTableModel.getRowCount(); i++) {
-
+				for (int i = 0; i < newStockTableModel.getRowCount(); i++) {
 					if (stocksTable.getValueAt(i, 1).toString().equals("0") == false
-							&& Validater.vOnlyContainsNumbers(stocksTable
-									.getValueAt(i, 1).toString()) == true) {
-						StocksNeeded.add(stocksTable.getValueAt(i, 0)
-								.toString());
-						StocksNeeded.add(stocksTable.getValueAt(i, 1)
-								.toString());
-						System.out.println(StocksNeeded.get(0));
+							&& Validator.vOnlyContainsNumbers(stocksTable.getValueAt(i, 1).toString()) == true) {
+						StocksNeeded.add(stocksTable.getValueAt(i, 0).toString());
+						StocksNeeded.add(stocksTable.getValueAt(i, 1).toString());
 					}
 
 				}
@@ -123,50 +166,52 @@ public class NewProduct {
 					valid = false;
 				}
 
-				// sort into format
+				// Turn inputs into correctly formatted string.
 				System.out.println(valid);
 				if (valid == true) {
-					newStock = Name + "[";
+					newStock = name + "[";
 
 					for (int i = 0; i < StocksNeeded.size(); i++) {
 						newStock += "/" + StocksNeeded.get(i);
 
 					}
 					newStock += "]" + time;
-					// add prodcut to products table
+					// Add product to products table.
 					Tab2.addRow(newStock.substring(0, newStock.indexOf("[")));
-
+					// Add product to text file
+					FileAccess Productsfile = new FileAccess(Paths.get("TextFiles/Products.txt"));
 					Productsfile.sWriteFileData(newStock);
 					frame.dispose();
 				} else {
-					JOptionPane.showMessageDialog(null, "sumtin wrong");
+					JOptionPane.showMessageDialog(null, "Could not create stock: invalid inputs");
 				}
-
-				// validate inputs of table, name, time to prepare
-
-				// add product to products.txt
-
 			}
 		});
 	}
 
+	/**
+	 * Creates the table.
+	 */
 	@SuppressWarnings("serial")
 	private void createTable() {
-		nsTableModel = new NewStockTableModel();
-		dTableModel = new DefaultTableModel(nsTableModel.getdata(),
+		newStockTableModel = new NewStockTableModel();
+		defaultTableModel = new DefaultTableModel(newStockTableModel.getdata(),
 				new Object[] { "stocks", "# required to make" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 1;
 			}
 		};
-		stocksTable = new JTable(dTableModel);
+		stocksTable = new JTable(defaultTableModel);
 		stocksTable.getTableHeader().setReorderingAllowed(false);
 		scrollPane = new JScrollPane(stocksTable);
 		scrollPane.setPreferredSize(new Dimension(300, 400));
 
 	}
 
+	/**
+	 * Creates the frame.
+	 */
 	private void createFrame() {
 		frame = new JFrame("New Product");
 		frame.getContentPane().setLayout(new MigLayout());

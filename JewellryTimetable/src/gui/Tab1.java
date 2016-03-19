@@ -20,23 +20,72 @@ import javax.swing.table.DefaultTableModel;
 
 import processing.DeleteStock;
 import processing.FileAccess;
-import processing.Validater;
+import processing.NewStock;
+import processing.Restock;
+import processing.Validator;
 import tableModels.StockTableModel;
 import net.miginfocom.swing.MigLayout;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Tab1.
+ */
 public class Tab1 {
+
+	/** The JPanel which contains everything required on the tab. */
 	private JPanel tab1;
+
+	/**
+	 * The JTable which contains the name and quantity of each stock, also
+	 * ability to enter restock amount.
+	 */
 	private JTable stockTable;
+
+	/** The TableModel for the stock table. */
 	private StockTableModel tModel;
+
+	/** The console which displays restock history and any errors. */
 	private ScrollTextArea console;
+
+	/** The panel which contains the console. */
 	private JPanel cPanel;
-	private DeleteStock deleter = new DeleteStock();
-	private Validater validater = new Validater();
+
+	/** The new stock function creates a new stock. */
+	private NewStock newStock = new NewStock();
+
+	/**
+	 * The restock function inputs restock outputs new stock amounts and writes
+	 * to order history.
+	 */
+	private Restock restock = new Restock();
+
+	/** The delete stock deletes desired stock. */
+	private DeleteStock deleteStock = new DeleteStock();
+
+	/** The validator checks inputs are in the correct format. */
+	private Validator validator = new Validator();
+
+	/** The stock table model. */
 	private DefaultTableModel stockTableModel;
-	private FileAccess Stocks, OrderHistory;
+
+	/** The Stocks allows access to Stocks text file for reading/writing */
+	private FileAccess Stocks;
+
+	/**
+	 * The Order history allows access to OrderHistory text file for
+	 * reading/writing.
+	 */
+	private FileAccess OrderHistory;
+
+	/** The date format specifies what format the time should be displayed in */
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+	/** The calendar converts time to a date. */
 	Calendar cal = Calendar.getInstance();
 
+	/**
+	 * Instantiates a new tab1.
+	 */
 	public Tab1() {
 
 		Stocks = new FileAccess(Paths.get("TextFiles/Stocks.txt"));
@@ -44,35 +93,36 @@ public class Tab1 {
 
 	}
 
+	/**
+	 * The Create function creates all buttons and tables required for the first
+	 * tab.
+	 *
+	 * @return Tab1
+	 */
 	@SuppressWarnings("serial")
 	public JPanel create() {
-		// Frame1.setSize(new Dimension);
-
 		tab1 = new JPanel();
 		tab1.setLayout(new MigLayout());
-		// buttons
 
-		JButton restock = new JButton("Restock");
-		JButton newStock = new JButton("New Stock");
-		JButton deleteStock = new JButton("Delete Stock");
+		// Creating buttons for gui display.
+		JButton restockButton = new JButton("Restock");
+		JButton newStockButton = new JButton("New Stock");
+		JButton deleteStockButton = new JButton("Delete Stock");
 
-		// sort out buttons
-
-		// scroll area
+		// Creating scroll panel for console.
 		cPanel = new JPanel();
 		cPanel.setPreferredSize(new Dimension(300, 400));
 		console = new ScrollTextArea(300, 400);
 		console.setPreferredSize(new Dimension(320, 475));
 		cPanel.add(console);
-		// get order history
+
 		getOrderHistory();
 
-		// table
-
+		// Make the Table for stocks.
 		tModel = new StockTableModel();
 
-		stockTableModel = new DefaultTableModel(tModel.data, new Object[] {
-				"Name", "Current in Stock in /g or /cm", "# to restock" }) {
+		stockTableModel = new DefaultTableModel(tModel.data,
+				new Object[] { "Name", "Current in Stock in /g or /cm", "# to restock" }) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 2;
@@ -82,161 +132,57 @@ public class Tab1 {
 		stockTable = new JTable(stockTableModel);
 		stockTable.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scrollPane = new JScrollPane(stockTable);
-		// add above to tab1
+		// add created objects to tab1 in correct locations
 		tab1.add(scrollPane, "cell 0 0, split 2");
 		tab1.add(cPanel, "cell 0 0");
-		tab1.add(restock, "cell 0 1, split 3,grow");
-		tab1.add(newStock, "cell 0 1 , grow");
-		tab1.add(deleteStock, "cell 0 1,grow");
+		tab1.add(restockButton, "cell 0 1, split 3,grow");
+		tab1.add(newStockButton, "cell 0 1 , grow");
+		tab1.add(deleteStockButton, "cell 0 1,grow");
 
-		// button actions
-
-		newStock.addActionListener(new ActionListener() {
+		// add action listeners to buttons.
+		newStockButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String Stock;
-				String number;
-				int entered = 0;
-				while (entered == 0) {
-					Stock = JOptionPane.showInputDialog("name of Stock");
-					System.out.println(Stock);
-					if (validater.vSimpleString(Stock) == true) {
-						number = JOptionPane
-								.showInputDialog("current # in stock");
-						if (validater.vOnlyContainsNumbers(number) == true
-								&& Integer.parseInt(number) >= 0) {
-
-							FileAccess access = new FileAccess(Paths
-									.get("TextFiles/Stocks.txt"));
-
-							stockTableModel.addRow(new Object[] { Stock,
-									number, 0 });
-							access.sWriteFileData(Stock);
-							access.sWriteFileData(number);
-							entered = 1;
-						} else if (number == "") {
-							entered = -1;
-							break;
-						}
-
-					} else if (Stock.equals("")) {
-						entered = -1;
-						break;
-					}
-
-				}
+				newStock.newStock(stockTableModel);
 
 			}
 		});
-		deleteStock.addActionListener(new ActionListener() {
+		deleteStockButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				deleter.delete(stockTableModel);
+				deleteStock.delete(stockTableModel);
 			}
 		});
-		restock.addActionListener(new ActionListener() {
-
+		restockButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-				// stop cell editing
-				stockTable.editCellAt(0, 2);
-				stockTable.getCellEditor().stopCellEditing();
-
-				// set null values to 0
-				for (int x = 0; x < stockTableModel.getRowCount(); x++) {
-					if ((stockTableModel.getValueAt(x, 2)).equals("")) {
-						stockTableModel.setValueAt("0", x, 2);
-					}
-				}
-
-				ArrayList<String> history = new ArrayList<String>();
-				ArrayList<Integer> cStocks = new ArrayList<Integer>();
-				ArrayList<Integer> rStocks = new ArrayList<Integer>();
-				String confirm = "to restock \n";
-				String tempcStocks, temprStocks;
-				cStocks.clear();
-				rStocks.clear();
-
-				try {
-					for (int i = 0; i < stockTableModel.getRowCount(); i++) {
-
-						tempcStocks = stockTableModel.getValueAt(i, 1)
-								.toString();
-						temprStocks = stockTableModel.getValueAt(i, 2)
-								.toString();
-						cStocks.add(Integer.parseInt(tempcStocks));
-						rStocks.add(Integer.parseInt(temprStocks));
-
-						if (rStocks.get(i) != 0) {
-							confirm += "\n" + stockTableModel.getValueAt(i, 0)
-									+ " x " + rStocks.get(i) + "\t total: "
-									+ (cStocks.get(i) + rStocks.get(i));
-							history.add(stockTableModel.getValueAt(i, 0)
-									+ " x " + rStocks.get(i) + "\t total: "
-									+ (cStocks.get(i) + rStocks.get(i)));
-						}
-					}
-
-					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null,
-							confirm, "Comfirmation", dialogButton);
-
-					if (dialogResult == JOptionPane.YES_OPTION) {
-						for (int ii = 0; ii < stockTableModel.getRowCount(); ii++) {
-							stockTableModel.setValueAt(
-									(Object) (cStocks.get(ii) + rStocks.get(ii)),
-									ii, 1);
-							stockTableModel.setValueAt(0, ii, 2);
-							Stocks.sEditline(
-									String.valueOf(cStocks.get(ii)
-											+ rStocks.get(ii)), (2 * ii) + 1);
-						}
-						OrderHistory.sWriteFileData("\n"
-								+ dateFormat.format(cal.getTime()));
-						console.appendToOutput(
-								"\n" + dateFormat.format(cal.getTime()) + "\n",
-								Color.black, false);
-						for (int x = 0; x < history.size(); x++) {
-							OrderHistory.sWriteFileData(history.get(x));
-							console.appendToOutput(history.get(x) + "\n",
-									Color.BLACK, false);
-						}
-
-					} else {
-
-					}
-					history.clear();
-					cStocks.clear();
-					rStocks.clear();
-				} catch (NumberFormatException e) {
-					console.appendToOutput(
-							"error: incorrect input (try using just positive numbers) \n",
-							Color.red, true);
-				}
+				restock.restock(stockTable, console);
 			}
 		});
 		return tab1;
 	}
 
+	/**
+	 * Updates current stock amounts from the text file
+	 */
 	public void update() {
 		ArrayList<String> stockFile = new ArrayList<String>();
 		stockFile = Stocks.sReadFileData();
-		for (int i = 0; i < stockFile.size()/2; i++) {
-			System.out.println("gothere");
-			stockTable.setValueAt( stockFile.get(2*i + 1),i, 1);
-			
+		for (int i = 0; i < stockFile.size() / 2; i++) {
+			stockTable.setValueAt(stockFile.get(2 * i + 1), i, 1);
 		}
 	}
 
+	/**
+	 * Gets the order history from text file and outputs to console.
+	 */
 	private void getOrderHistory() {
 		ArrayList<String> tOrderHistory = new ArrayList<String>();
 		tOrderHistory = OrderHistory.sReadFileData();
 		for (int i = 0; i < tOrderHistory.size(); i++) {
-			console.appendToOutput(tOrderHistory.get(i) + "\n", Color.BLACK,
-					false);
+			console.appendToOutput(tOrderHistory.get(i) + "\n", Color.BLACK, false);
 		}
 	}
 }
