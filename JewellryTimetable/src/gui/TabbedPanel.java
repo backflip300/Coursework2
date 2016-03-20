@@ -12,7 +12,6 @@ import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TabbedPanel.
  *
@@ -113,7 +112,7 @@ public class TabbedPanel extends JFrame {
 	}
 
 	/**
-	 * Sets the panel3.
+	 * Sets panel3.
 	 *
 	 * @param panel3
 	 *            the new panel3
@@ -122,14 +121,12 @@ public class TabbedPanel extends JFrame {
 		this.panel3 = panel3;
 	}
 
-	/** The tabchange. */
+	/** The tabchange listens for when a tab changes. */
 	ChangeListener tabchange = new ChangeListener() {
 
 		@Override
 		// updates stock incase of change changed
 		public void stateChanged(ChangeEvent changeEvent) {
-			JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-			int index = sourceTabbedPane.getSelectedIndex();
 			tab1.update();
 		}
 	};
@@ -138,7 +135,7 @@ public class TabbedPanel extends JFrame {
 	 * The main method.
 	 *
 	 * @param args
-	 *            the arguments
+	 *            the arguments for this program.
 	 */
 	public static void main(String args[]) {
 		// Create an instance of the test application

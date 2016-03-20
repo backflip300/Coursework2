@@ -3,29 +3,42 @@ package processing;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ExtractProduct.
  */
 public class ExtractProduct {
 
-	/** The file. */
-	private FileAccess file = new FileAccess(Paths.get("TextFiles/Products.txt"));
-	
-	/** The current line. */
+	/**
+	 * The productsFile allows access to the products text file for
+	 * reading/writing.
+	 */
+	private FileAccess productsFile = new FileAccess(Paths.get("TextFiles/Products.txt"));
+
+	/** The current line which the product is being extracted from. */
 	private String currentLine;
-	
-	/** The num of stocks. */
-	private int openBracket, closeBracket, numOfStocks;
-	
-	/** The slashes. */
+
+	/** The num of different stocks each product can produce. */
+	private int numOfStocks;
+
+	/**
+	 * The close bracket holds the location in the current line of the closed
+	 * bracket.
+	 */
+	private int closeBracket;
+	/**
+	 * The slashes holds the location in the current line of all the forwawrd
+	 * slashes.
+	 */
 	ArrayList<Integer> slashes = new ArrayList<Integer>();
 
 	/**
-	 * Extractproducts.
+	 * Extractproducts get the products into the correct format from the text
+	 * file.
 	 *
-	 * @param desiredProducts the desired products
-	 * @return the product[]
+	 * @param desiredProducts
+	 *            the desired products
+	 * @return the product[] contains all desired products
 	 */
 	public Product[] Extractproducts(String[] desiredProducts) {
 		ArrayList<String> fileData = new ArrayList<String>();
@@ -34,7 +47,7 @@ public class ExtractProduct {
 		String[] stocks;
 		int[] quantity;
 		int time;
-		fileData = file.sReadFileData();
+		fileData = productsFile.sReadFileData();
 		for (int i = 0; i < fileData.size(); i++) {
 			currentLine = fileData.get(i);
 			for (int x = 0; x < desiredProducts.length; x++) {
@@ -53,7 +66,7 @@ public class ExtractProduct {
 	}
 
 	/**
-	 * Extract all.
+	 * Extract all get's all products saved in the products text file.
 	 *
 	 * @return the product[]
 	 */
@@ -65,7 +78,7 @@ public class ExtractProduct {
 		int[] quantity;
 		int time;
 
-		fileData = file.sReadFileData();
+		fileData = productsFile.sReadFileData();
 		Product[] products = new Product[fileData.size()];
 		for (int i = 0; i < fileData.size(); i++) {
 			currentLine = fileData.get(i);
@@ -81,13 +94,13 @@ public class ExtractProduct {
 	}
 
 	/**
-	 * Gets the points.
+	 * Gets the points in products string required to determine it
+	 * name,stocks,quantity, and time.
 	 *
 	 * @return the points
 	 */
 	private void getpoints() {
 		slashes.clear();
-		openBracket = currentLine.indexOf("[");
 		closeBracket = currentLine.indexOf("]");
 		numOfStocks = 0;
 		for (int i = 0; i < currentLine.length(); i++) {
@@ -100,20 +113,20 @@ public class ExtractProduct {
 	}
 
 	/**
-	 * Extract name.
+	 * Extract name of product.
 	 *
-	 * @return the string
+	 * @return the name
 	 */
 	public String extractName() {
-		String Name = currentLine.substring(0,currentLine.indexOf("[") );
+		String Name = currentLine.substring(0, currentLine.indexOf("["));
 
 		return Name;
 	}
 
 	/**
-	 * Extract stocks.
+	 * Extract stocks used by product.
 	 *
-	 * @return the string[]
+	 * @return the string[] containing stocks needed to create the product
 	 */
 	public String[] extractStocks() {
 		String[] Stocks;
@@ -127,9 +140,10 @@ public class ExtractProduct {
 	}
 
 	/**
-	 * Extract quantity.
+	 * Extract quantity of each stock used by product .
 	 *
-	 * @return the int[]
+	 * @return the int[] containing the quantity of each stock needed to create
+	 *         the product
 	 */
 	public int[] extractQuantity() {
 		int[] Quantity = new int[numOfStocks];
@@ -142,9 +156,9 @@ public class ExtractProduct {
 	}
 
 	/**
-	 * Extract time.
+	 * Extract time to create product.
 	 *
-	 * @return the int
+	 * @return the int containing the time needed to create the product.
 	 */
 	public int extractTime() {
 		int time;

@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NewStock.
  */
@@ -30,35 +29,34 @@ public class NewStock {
 	public void newStock(DefaultTableModel stockTableModel) {
 		String Stock;
 		String number;
-		int entered = 0;
-		while (entered == 0) {
-			// Input name.
-			Stock = JOptionPane.showInputDialog("name of Stock");
-			System.out.println(Stock);
-			// Validate name.
-			if (validator.vSimpleString(Stock) == true) {
-				// Input current amount in stock.
+		// Input name.
+		Stock = JOptionPane.showInputDialog("name of Stock");
+		System.out.println(Stock);
+		// Validate name.
+		if (validator.vSimpleString(Stock)) {
+			// Input current amount in stock.
+
+			if (validator.stockexists(Stock) == false) {
+
 				number = JOptionPane.showInputDialog("current # in stock");
 				// If valid input add stock to table and text file.
-				if (validator.vOnlyContainsNumbers(number) == true && Integer.parseInt(number) >= 0) {
+				if (validator.vOnlyContainsNumbers(number) && Integer.parseInt(number) >= 0) {
 
 					FileAccess access = new FileAccess(Paths.get("TextFiles/Stocks.txt"));
 
 					stockTableModel.addRow(new Object[] { Stock, number, 0 });
 					access.sWriteFileData(Stock);
 					access.sWriteFileData(number);
-					entered = 1;
-				} else if (number == "") {
-					entered = -1;
-					break;
+				} else {
+					JOptionPane.showMessageDialog(null, "Couldn't create stock: Invalid quantity.");
 				}
-
-			} else if (Stock.equals("")) {
-				entered = -1;
-				break;
+			} else {
+				JOptionPane.showMessageDialog(null, "Couldn't create stock: Stock already exists.");
 			}
-
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"Couldn't create stock: Invalid name ( must only contain letters and numbers) .");
 		}
-	}
 
+	}
 }

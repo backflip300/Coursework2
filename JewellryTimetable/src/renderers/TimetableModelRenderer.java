@@ -12,7 +12,7 @@ import processing.Validator;
  * The Class TTMRenderer.
  */
 @SuppressWarnings("serial")
-public class TTMRenderer extends DefaultTableCellRenderer {
+public class TimetableModelRenderer extends DefaultTableCellRenderer {
 
 	/** The validater. */
 	Validator validator = new Validator();

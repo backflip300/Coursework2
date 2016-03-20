@@ -1,12 +1,10 @@
 package tableModels;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import processing.FileAccess;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NewStockTableModel.
  */
@@ -25,7 +23,6 @@ public class NewStockTableModel {
 	 * Instantiates a new new stock table model.
 	 */
 	public NewStockTableModel() {
-		// TODO Auto-generated constructor stub
 		getdata();
 	}
 

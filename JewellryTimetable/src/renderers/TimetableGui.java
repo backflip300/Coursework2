@@ -24,12 +24,11 @@ import processing.ExtractProduct;
 import processing.FileAccess;
 import processing.Product;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TTGui.
  */
 @SuppressWarnings("serial")
-public class TTGui extends JPanel {
+public class TimetableGui extends JPanel {
 
 	/** The products table model. */
 	private DefaultTableModel ttTableModel, productsTableModel;
@@ -124,7 +123,7 @@ public class TTGui extends JPanel {
 	 * @param tab
 	 *            the tab2
 	 */
-	public TTGui(DefaultTableModel ttDefaultTableModel, Tab2 tab) {
+	public TimetableGui(DefaultTableModel ttDefaultTableModel, Tab2 tab) {
 
 		totalLength = tab.getGuiSize().width;
 		thickness = tab.getGuiSize().height / 5;

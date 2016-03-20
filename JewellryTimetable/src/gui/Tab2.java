@@ -25,8 +25,8 @@ import net.miginfocom.swing.MigLayout;
 import processing.DeleteProduct;
 import processing.NewProduct;
 import processing.Validator;
-import renderers.TTGui;
-import renderers.TTMRenderer;
+import renderers.TimetableGui;
+import renderers.TimetableModelRenderer;
 import tableModels.ProductTableModel;
 import tableModels.TimetableTableModel;
 
@@ -76,7 +76,7 @@ public class Tab2 {
 	 * The timetable gui presents a preview of what the timetable will look
 	 * like.
 	 */
-	private TTGui timetableGui;
+	private TimetableGui timetableGui;
 
 	/** The graphics used to render timetable */
 	private Graphics graphics;
@@ -103,9 +103,9 @@ public class Tab2 {
 	public JPanel create(TabbedPanel tabbedPanel) {
 		ProductTableModel productTableModel;
 		TimetableTableModel TimetableTableModel;
-		TTMRenderer cellRenderer;
+		TimetableModelRenderer cellRenderer;
 		this.tabbedPanel = tabbedPanel;
-		cellRenderer = new TTMRenderer();
+		cellRenderer = new TimetableModelRenderer();
 		tab2 = new JPanel();
 		tab2.setLayout(new MigLayout());
 		// Create products table.
@@ -138,7 +138,7 @@ public class Tab2 {
 		timetableTable.setDefaultRenderer(Object.class, cellRenderer);
 
 		// Create timetable preview renderer.
-		timetableGui = new TTGui(dtablemodel2, this);
+		timetableGui = new TimetableGui(dtablemodel2, this);
 		timetableGui.setPreferredSize(GuiSize);
 		timetableGui.setBackground(Color.white);
 		timetableGui.paint(graphics);

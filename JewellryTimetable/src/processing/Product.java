@@ -1,8 +1,6 @@
 package processing;
 
-import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Product.
  */

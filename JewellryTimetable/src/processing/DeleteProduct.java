@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-
 /**
  * The Class DeleteProduct function is to delete a specified product if it
  * exists.

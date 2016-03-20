@@ -53,12 +53,12 @@ public class ScrollTextArea extends JPanel {
 	/**
 	 * Append text to the output area
 	 *
-	 * @param String
-	 *            of text to output
-	 * @param Color
-	 *            of text
-	 * @param Is
-	 *            text bold
+	 * @param msg
+	 *            text to output
+	 * @param c
+	 *            Color of text
+	 * @param makeBold
+	 *            make text bold
 	 */
 	public void appendToOutput(String msg, Color c, boolean makeBold) {
 		mLock.lock();
@@ -70,8 +70,6 @@ public class ScrollTextArea extends JPanel {
 			mCompOutputArea.getDocument().insertString(mCompOutputArea.getDocument().getLength(), msg, attSet);
 
 		} catch (BadLocationException e) {
-			// should NEVER happen as we are inserting the string at
-			// doc.getLength() -> ie, at the end of it and no furthur!
 			e.printStackTrace();
 		}
 		JScrollBar vertical = mPanelOutputScroller.getVerticalScrollBar();

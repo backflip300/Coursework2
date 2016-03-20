@@ -21,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import tableModels.NewStockTableModel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NewProduct.
  */
@@ -134,7 +133,7 @@ public class NewProduct {
 			// validates inputs and then creates new product if
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
+				String errorMessage = "";
 				Validator Validator = new Validator();
 				ArrayList<String> StocksNeeded = new ArrayList<String>();
 				boolean valid = true;
@@ -142,16 +141,28 @@ public class NewProduct {
 				// Validate name.
 				if (Validator.vSimpleString(tName.getText()) == true) {
 					name = tName.getText();
+					// Validate name is not already being used.
+					if (Validator.productExists(name)) {
+						valid = false;
+
+						errorMessage = "Could not create product: product already exists with that name.";
+					}
 				} else {
 					valid = false;
+					errorMessage = "Could not create product: invalid name (can only contain letters and numbers).";
 				}
+
 				// Validate time.
 				if (Validator.vOnlyContainsNumbers(tTime.getText()) == true) {
 					time = Integer.parseInt(tTime.getText());
-					if (time <= 0)
+					if (time <= 0) {
 						valid = false;
-				} else
+						errorMessage = "Could not create product: invalid time (positive numbers only).";
+					}
+				} else {
 					valid = false;
+					errorMessage = "Could not create product: invalid time (positive numbers only).";
+				}
 				// Validate stocks needed.
 				StocksNeeded.clear();
 				for (int i = 0; i < newStockTableModel.getRowCount(); i++) {
@@ -163,6 +174,7 @@ public class NewProduct {
 
 				}
 				if (StocksNeeded.size() == 0) {
+					errorMessage = "Could not create product: no stock used.";
 					valid = false;
 				}
 
@@ -183,7 +195,7 @@ public class NewProduct {
 					Productsfile.sWriteFileData(newStock);
 					frame.dispose();
 				} else {
-					JOptionPane.showMessageDialog(null, "Could not create stock: invalid inputs");
+					JOptionPane.showMessageDialog(null, errorMessage);
 				}
 			}
 		});

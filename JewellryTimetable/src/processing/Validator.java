@@ -1,8 +1,8 @@
 package processing;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Validater.
  */
@@ -90,6 +90,48 @@ public class Validator {
 		isValid = false;
 		if (toValidate.matches("[0-9]+")) {
 			isValid = true;
+		}
+		return isValid;
+	}
+
+	/**
+	 * Stockexists checks if stock name already exists
+	 *
+	 * @param stock
+	 *            the stock name to check
+	 * @return true, if stock already exists
+	 */
+	public boolean stockexists(String stock) {
+		isValid = false;
+		// Get existing stocks, check against new stock if any match
+		ArrayList<String> stocks = new ArrayList<String>();
+		FileAccess StockFile = new FileAccess(Paths.get("TextFiles/Stocks.txt"));
+		stocks = StockFile.sReadFileData();
+		for (int i = 0; i < stocks.size() / 2; i++) {
+			if (stock.equals(stocks.get(2 * i))) {
+				isValid = true;
+				break;
+			}
+		}
+		return isValid;
+	}
+
+	/**
+	 * Product exists checks if a product already exists under then given name.
+	 *
+	 * @param name
+	 *            the name of the product to check
+	 * @return true, if product exists
+	 */
+	public boolean productExists(String name) {
+		isValid = false;
+		// Get existing products, see if name matches any of the products.
+		ArrayList<String> products = new ArrayList<String>();
+		FileAccess productsFile = new FileAccess(Paths.get("TextFiles/Products.txt"));
+		products = productsFile.sReadFileData();
+		for (int i = 0; i < products.size(); i++) {
+			if (name.equals(products.get(i).substring(0, products.get(i).indexOf('['))))
+				isValid = true;
 		}
 		return isValid;
 	}

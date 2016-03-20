@@ -9,28 +9,28 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class FileAccess.
  */
 public class FileAccess {
-	
-	/** The Location. */
+
+	/** The Location of the file. */
 	private Path Location;
 
 	/**
 	 * Instantiates a new file access.
 	 *
-	 * @param Location the location
+	 * @param Location
+	 *            the location of the file
 	 */
 	public FileAccess(Path Location) {
 		this.Location = Location;
 	}
 
 	/**
-	 * O read file data.
+	 * O read file data gives out arraylist of textfile as objects.
 	 *
-	 * @return the array list
+	 * @return the array list containing the textfile as objects
 	 */
 	public ArrayList<Object> oReadFileData() {
 		ArrayList<Object> fileData = new ArrayList<Object>();
@@ -47,9 +47,9 @@ public class FileAccess {
 	}
 
 	/**
-	 * S read file data.
+	 * S read file data out arraylist of textfile as strings.
 	 *
-	 * @return the array list
+	 * @return the array list containing the textfile as strings
 	 */
 	public ArrayList<String> sReadFileData() {
 		ArrayList<String> fileData = new ArrayList<String>();
@@ -66,9 +66,10 @@ public class FileAccess {
 	}
 
 	/**
-	 * S write file data.
+	 * S write file data writes to the end of the file.
 	 *
-	 * @param toWrite the to write
+	 * @param toWrite
+	 *            the text to write to the end of the file
 	 */
 	public void sWriteFileData(String toWrite) {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(Location.toString(), true))) {
@@ -81,18 +82,20 @@ public class FileAccess {
 	}
 
 	/**
-	 * S editline.
+	 * S editline edits a line in the text file.
 	 *
-	 * @param toedit the toedit
-	 * @param line the line
+	 * @param toEdit
+	 *            the line of text to replace the old line with
+	 * @param line
+	 *            the line to change.
 	 */
-	public void sEditline(String toedit, int line) {
+	public void sEditline(String toEdit, int line) {
 		// get old data
 		ArrayList<String> oldData = new ArrayList<String>();
 		oldData = sReadFileData();
 		// edit line
 		oldData.remove(line);
-		oldData.add(line, toedit);
+		oldData.add(line, toEdit);
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(Location.toString(), false))) {
 			writer.write("");
 			for (int i = 0; i < oldData.size(); i++) {
@@ -100,15 +103,15 @@ public class FileAccess {
 				writer.newLine();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * S remove line.
+	 * S remove line of text from file.
 	 *
-	 * @param line the line
+	 * @param line
+	 *            the line to remove
 	 */
 	public void sRemoveLine(int line) {
 		ArrayList<String> oldData = new ArrayList<String>();
@@ -123,7 +126,7 @@ public class FileAccess {
 			}
 			writer.write("");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 	}

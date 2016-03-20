@@ -1,12 +1,10 @@
 package tableModels;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import processing.FileAccess;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class StockTableModel.
  *

@@ -1,13 +1,7 @@
 package tableModels;
 
-import java.awt.Color;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import javax.swing.table.DefaultTableCellRenderer;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class timetableTableModel.
  *

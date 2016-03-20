@@ -12,7 +12,7 @@ import javax.swing.JTable;
 
 import gui.ScrollTextArea;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Restock.
  */
@@ -82,26 +82,33 @@ public class Restock {
 							+ (cStocks.get(i) + rStocks.get(i)));
 				}
 			}
-			// Get user to confirm restocks
-			int dialogButton = JOptionPane.YES_NO_OPTION;
-			int dialogResult = JOptionPane.showConfirmDialog(null, confirm, "Comfirmation", dialogButton);
 
-			if (dialogResult == JOptionPane.YES_OPTION) {
-				for (int ii = 0; ii < stockTable.getRowCount(); ii++) {
-					// Add restock values to current values, change on table and
-					// in text file.
-					stockTable.setValueAt((Object) (cStocks.get(ii) + rStocks.get(ii)), ii, 1);
-					stockTable.setValueAt(0, ii, 2);
-					Stocks.sEditline(String.valueOf(cStocks.get(ii) + rStocks.get(ii)), (2 * ii) + 1);
-				}
-				// Add order history to text file and to the console.
-				OrderHistory.sWriteFileData("\n" + dateFormat.format(calendar.getTime()));
-				console.appendToOutput("\n" + dateFormat.format(calendar.getTime()) + "\n", Color.black, false);
-				for (int x = 0; x < history.size(); x++) {
-					OrderHistory.sWriteFileData(history.get(x));
-					console.appendToOutput(history.get(x) + "\n", Color.BLACK, false);
-				}
+			// Check something to restock.
+			if (history.size() == 0) {
+				JOptionPane.showMessageDialog(null, "Could not restock: nothing to restock");
+			} else {
+				// Get user to confirm restocks.
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog(null, confirm, "Comfirmation", dialogButton);
 
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					for (int ii = 0; ii < stockTable.getRowCount(); ii++) {
+						// Add restock values to current values, change on table
+						// and
+						// in text file.
+						stockTable.setValueAt((Object) (cStocks.get(ii) + rStocks.get(ii)), ii, 1);
+						stockTable.setValueAt(0, ii, 2);
+						Stocks.sEditline(String.valueOf(cStocks.get(ii) + rStocks.get(ii)), (2 * ii) + 1);
+					}
+					// Add order history to text file and to the console.
+					OrderHistory.sWriteFileData("\n" + dateFormat.format(calendar.getTime()));
+					console.appendToOutput("\n" + dateFormat.format(calendar.getTime()) + "\n", Color.black, false);
+					for (int x = 0; x < history.size(); x++) {
+						OrderHistory.sWriteFileData(history.get(x));
+						console.appendToOutput(history.get(x) + "\n", Color.BLACK, false);
+					}
+
+				}
 			}
 			history.clear();
 			cStocks.clear();

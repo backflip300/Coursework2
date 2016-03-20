@@ -1,1 +1,2 @@
-Bluenecklace[/Blue/5]10
+test2[/Example2/12]45
+test5[/Example3/100]12
