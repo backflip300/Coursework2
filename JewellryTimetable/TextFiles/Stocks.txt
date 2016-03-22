@@ -1,6 +1,6 @@
+Example1
+70
 Example2
-582
+10
 Example3
-50
-Example4
-6
+80

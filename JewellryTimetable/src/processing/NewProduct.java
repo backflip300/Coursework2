@@ -170,6 +170,10 @@ public class NewProduct {
 							&& Validator.vOnlyContainsNumbers(stocksTable.getValueAt(i, 1).toString()) == true) {
 						StocksNeeded.add(stocksTable.getValueAt(i, 0).toString());
 						StocksNeeded.add(stocksTable.getValueAt(i, 1).toString());
+					} else if (Validator.vOnlyContainsNumbers(stocksTable.getValueAt(i, 1).toString()) == false) {
+						valid = false;
+						errorMessage = "Could not create product: invalid number to produce input(s).";
+
 					}
 
 				}

@@ -80,10 +80,9 @@ public class DeleteStock {
 					stocksTable.removeRow(i / 2);
 					stocksFile.sRemoveLine(i);
 					stocksFile.sRemoveLine(i);
-					break;
+					return;
 				}
 			}
-		} else {
 			JOptionPane.showMessageDialog(null, "Cannot delete stock: does not exist");
 		}
 	}

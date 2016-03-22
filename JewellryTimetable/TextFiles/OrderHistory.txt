@@ -1,12 +1,8 @@
 
-2016/03/20 10:02:36
+2016/03/21 20:05:26
+Example1 x 5	 total: 5
+Example3 x 2	 total: 5
 
-2016/03/20 13:53:13
-Example2 x 12	 total: 24
-Example4 x 5	 total: 6
-
-2016/03/20 13:53:13
-Example2 x 1000	 total: 1024
-
-2016/03/20 13:53:13
-Example2 x -10	 total: 726
+2016/03/21 20:24:40
+Example1 x 100	 total: 105
+Example3 x 100	 total: 105
