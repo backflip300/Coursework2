@@ -17,7 +17,6 @@ public class NewStock {
 	 * Instantiates a new new stock.
 	 */
 	public NewStock() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

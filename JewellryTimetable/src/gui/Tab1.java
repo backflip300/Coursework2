@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,21 +11,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import net.miginfocom.swing.MigLayout;
 import processing.DeleteStock;
 import processing.FileAccess;
 import processing.NewStock;
 import processing.Restock;
-import processing.Validator;
 import tableModels.StockTableModel;
-import net.miginfocom.swing.MigLayout;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Tab1.
  */
@@ -61,9 +57,6 @@ public class Tab1 {
 
 	/** The delete stock deletes desired stock. */
 	private DeleteStock deleteStock = new DeleteStock();
-
-	/** The validator checks inputs are in the correct format. */
-	private Validator validator = new Validator();
 
 	/** The stock table model. */
 	private DefaultTableModel stockTableModel;

@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-import tableModels.StockTableModel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeleteStock.
  */

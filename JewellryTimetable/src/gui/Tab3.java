@@ -10,9 +10,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.miginfocom.swing.MigLayout;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Tab3.
  */
@@ -47,7 +45,6 @@ public class Tab3 extends JComponent {
 	 *
 	 * @return tab3
 	 */
-	@SuppressWarnings("serial")
 	public JPanel create() {
 		
 		tab3 = new JPanel();

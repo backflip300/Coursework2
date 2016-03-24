@@ -210,7 +210,7 @@ public class TimetableGui extends JPanel {
 	 */
 	private void filldays() {
 		dayTime = new int[5][2];
-		// Get amount of time availbe in each day.
+		// Get amount of time available in each day.
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 2; y++) {
 				dayTime[x][y] = 0;

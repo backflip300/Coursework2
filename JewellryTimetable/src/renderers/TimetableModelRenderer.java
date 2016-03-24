@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import processing.Validator;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class TTMRenderer.
  */

@@ -30,7 +30,7 @@ import renderers.TimetableModelRenderer;
 import tableModels.ProductTableModel;
 import tableModels.TimetableTableModel;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Tab2.
  */
